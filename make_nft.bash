@@ -1,7 +1,9 @@
 #!/bin/bash
 
+echo;
 #get location of the cardano node from the user
 read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath 
+echo;
 
 #declare location of the node as an environment variable
 export CARDANO_NODE_SOCKET_PATH=$nodepath
@@ -24,10 +26,13 @@ case $NETWORK in
         NETWORK='--testnet-magic 1097911063' 
         ;;
 esac
+echo;
 
 #get the NFT name and IPFS CID location from the user
 read -p 'Enter of the NFT name you want to create (no spaces) : ' nftname
+echo;
 read -p 'Enter the unique IPFS CID associated with the NFT : ' ipfs_cid
+echo;
 
 #create NFT file directory and change to that directory
 mkdir -p NFT
@@ -40,7 +45,8 @@ cd $nftname
 #generate vrf keys .vkey and .skey for the transaction, asking user permission to replace if files already exist
 if [ -f payment.skey ] || [-f payment.vkey ] 
 then
-    echo Vrf key files already exist. Would you like to overwrite?
+    echo VRF key files already exist. Would you like to overwrite?
+
     select overwrite in 'yes' 'no' 
     do
         break
@@ -49,8 +55,11 @@ then
     case $overwrite in
 
     yes) 
-        echo Generating payment.vkey and payment.skey
-        cardano-cli address key-gen --verification-key-file payment.vkey --signing-key-file payment.skey 
+        echo Generating payment.vkey and payment.skey files
+        
+        cardano-cli address key-gen \
+            --verification-key-file payment.vkey \
+            --signing-key-file payment.skey 
         ;;
     
     no)
@@ -58,16 +67,20 @@ then
         ;;
     esac
 else 
-    echo Generating payment.vkey and payment.skey
-    cardano-cli address key-gen --verification-key-file payment.vkey --signing-key-file payment.skey 
+    echo Generating payment.vkey and payment.skey files
+    echo;
+    cardano-cli address key-gen \
+        --verification-key-file payment.vkey \
+        --signing-key-file payment.skey 
 
 fi
-
+echo;
 
 #generate payment recieve address for the transaction, asking user permission to replace if files already exist
 if [ -f payment.addr ] 
 then
     echo Payment address already exists. Would you like to overwrite?
+
     select overwrite in 'yes' 'no' 
     do
         break
@@ -76,8 +89,11 @@ then
     case $overwrite in
 
     yes)
-        echo Generating payment.addr 
-        cardano-cli address build --payment-verification-key-file payment.vkey --out-file payment.addr $NETWORK
+        echo Generating payment address into payment.addr 
+
+        cardano-cli address build \
+            --payment-verification-key-file payment.vkey \
+            --out-file payment.addr $NETWORK
         ;;
     
     no)
@@ -85,10 +101,14 @@ then
         ;;
     esac
 else
-    echo Generating payment.addr
-    cardano-cli address build --payment-verification-key-file payment.vkey --out-file payment.addr $NETWORK
+    echo Generating payment address into payment.addr
+
+    cardano-cli address build \
+            --payment-verification-key-file payment.vkey \
+            --out-file payment.addr $NETWORK
 
 fi
+echo;
 
 #declare variable address - to be the recieve address of the newly created keys
 address=$(cat payment.addr)
@@ -106,9 +126,12 @@ echo ;echo;
 addressfunded=false
 while [ $addressfunded == false ]
 do
-    cardano-cli query utxo --address $address $NETWORK
+    cardano-cli query utxo \
+        --address $address \
+        $NETWORK
     echo;
     echo Is the address funded yet?
+
     select isfunded in 'yes' 'no' 
     do
         break
@@ -121,6 +144,7 @@ do
         ;;
     
     no)
+        echo;
         echo Address not funded yet, querying the blockchain again...
         echo;
         ;;
@@ -129,3 +153,53 @@ do
 done
 
 read -p "If the address contains enough ADA, Press enter to continue : "
+echo;
+
+#query the protocol parameters and save them into the file protocol.json
+echo Generating protocol parameters into protocol.json
+echo;
+
+cardano-cli query protocol-parameters \
+    $NETWORK \
+    --out-file protocol.json
+
+#generate the policyID files into a new folder called policy, asking user permission to replace if files already exist
+mkdir -p policy
+
+if [ -f "policy/policy.skey" ] || [-f "policy/policy.vkey" ] 
+then
+    echo Policy key files already exist. Would you like to overwrite?
+
+    select overwrite in 'yes' 'no' 
+    do
+        break
+    done
+
+    case $overwrite in
+
+    yes) 
+        echo Generating policy/policy.vkey and policy/policy.skey files
+
+        cardano-cli address key-gen \
+            --verification-key-file policy/policy.vkey \
+            --signing-key-file policy/policy.skey 
+        ;;
+    
+    no)
+        echo Original policy files left unchanged
+        ;;
+    esac
+else 
+    echo Generating payment.vkey and payment.skey files
+
+    cardano-cli address key-gen \
+        --verification-key-file policy/policy.vkey \
+        --signing-key-file policy/policy.skey  
+fi
+echo;
+
+# Extract uto - awk -F'"' '/#/{print $2}' query.txt 
+# Extact address - awk -F'"' '/address/{ print $4}' query.txt
+# Extract ADA value - awk '/lovelace/{ print $2}' query.txt
+
+# array=( $(awk -F ' ' '{ print $NF }' log filename) )
