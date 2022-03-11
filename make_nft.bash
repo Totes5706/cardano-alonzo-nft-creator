@@ -37,9 +37,9 @@ mkdir -p $nftname
 cd $nftname
 
 #generate vrf keys .vkey and .skey for the transaction, asking user permission to replace if files already exist
-if [ -f payment.skey || -f payment.vkey  ]; then
+if [ -f payment.skey ] || [-f payment.vkey ] 
+then
     echo "Vrf key files already exist. Would you like to overwrite?"
-
     select overwrite in 'yes' 'no' 
     do
         break
@@ -55,17 +55,16 @@ if [ -f payment.skey || -f payment.vkey  ]; then
         echo "Original vrf files left unchanged"
         ;;
     esac
-
 else 
     cardano-cli address key-gen --verification-key-file payment.vkey --signing-key-file payment.skey 
 
 fi
 
 
-#generate payment recieve address for the transaction
-if [ -f payment.addr ]; then
+#generate payment recieve address for the transaction, asking user permission to replace if files already exist
+if [ -f payment.addr ] 
+then
     echo "Payment address already exists. Would you like to overwrite?"
-
     select overwrite in 'yes' 'no' 
     do
         break
@@ -74,15 +73,14 @@ if [ -f payment.addr ]; then
     case $overwrite in
 
     yes) 
-        cardano-cli address build --payment-verification-key-file payment.vkey --out-file payment.addr $NETWORK)
+        cardano-cli address build --payment-verification-key-file payment.vkey --out-file payment.addr $NETWORK
         ;;
     
     no)
         echo "original address file left unchanged"
         ;;
     esac
-
 else 
-    cardano-cli address build --payment-verification-key-file payment.vkey --out-file payment.addr $NETWORK)
+    cardano-cli address build --payment-verification-key-file payment.vkey --out-file payment.addr $NETWORK
 
 fi
