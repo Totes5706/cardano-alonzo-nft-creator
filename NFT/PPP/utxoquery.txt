@@ -4,5 +4,11 @@
         "value": {
             "lovelace": 15000000
         }
+    },
+    "0876603c163fb138916d91859e8be7e2a950d244fd5c0b524a0c9f68bd0bf55e#0": {
+        "address": "addr_test1vqqfl57x0fcljraqjmj09n2t6jnh6x4nymjfy2p6hf4m7ac6r3a2f",
+        "value": {
+            "lovelace": 20000000
+        }
     }
 }
