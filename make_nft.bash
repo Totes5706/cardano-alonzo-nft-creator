@@ -2,30 +2,31 @@
 
 echo;
 #get location of the cardano node from the user
-read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath 
+read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' NODEPATH
 echo;
 
 #declare location of the node as an environment variable
-export CARDANO_NODE_SOCKET_PATH=$nodepath
+export CARDANO_NODE_SOCKET_PATH=$NODEPATH
 
 #specify from the user whether they are using either the testnet or mainnet and declare 
 echo Which Cardano network will you be using?
 
-select NETWORK in 'mainnet' 'testnet' 
+select network in 'mainnet' 'testnet' 
 do
     break
 done
 
-case $NETWORK in
+case $network in
 
     mainnet) 
-        NETWORK='--mainnet'
+        network='--mainnet'
         ;;
     
     testnet)
-        NETWORK='--testnet-magic 1097911063' 
+        network='--testnet-magic 1097911063' 
         ;;
 esac
+echo You chose: $network;
 echo;
 
 #get the NFT name and IPFS CID location from the user
@@ -93,7 +94,7 @@ then
 
         cardano-cli address build \
             --payment-verification-key-file payment.vkey \
-            --out-file payment.addr $NETWORK
+            --out-file payment.addr $network
         ;;
     
     no)
@@ -105,7 +106,7 @@ else
 
     cardano-cli address build \
             --payment-verification-key-file payment.vkey \
-            --out-file payment.addr $NETWORK
+            --out-file payment.addr $network
 
 fi
 echo;
@@ -128,7 +129,7 @@ while [ $addressfunded == false ]
 do
     cardano-cli query utxo \
         --address $address \
-        $NETWORK
+        $network
     echo;
     echo Is the address funded yet?
 
@@ -155,12 +156,37 @@ done
 read -p "If the address contains enough ADA, Press enter to continue : "
 echo;
 
+#store utxo information to file
+cardano-cli query utxo \
+        --address $address \
+        $network \
+        --out-file utxoquery.txt
+
+#store the query information in two arrays, one for the TxId,TxIx; the second for the ADA balance
+#awk -F'"' '/#/{print $2}' utxoquery.txt
+array_txid=($(awk -F'"' '/#/{print $2}' utxoquery.txt))
+#array_lovelace = (awk -F'"' '/#/{print $2}' utxoquery.txt)
+
+#combine them into one array
+#for idx in "${!array_txid[@]}"; do 
+#    array_utxo[idx]=$(( array_txid[idx] + array_lovelace[idx] ))
+#done
+
+
+#Specify from the user which utxo to use
+echo Which utxo would you like to use?
+select txidix in "${array_txid[@]}".
+ do
+    break
+done
+echo;
+
 #query the protocol parameters and save them into the file protocol.json
 echo Generating protocol parameters into protocol.json
 echo;
 
 cardano-cli query protocol-parameters \
-    $NETWORK \
+    $network \
     --out-file protocol.json
 
 #generate the policyID files into a new folder called policy, asking user permission to replace if files already exist
