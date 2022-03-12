@@ -5,8 +5,8 @@ module Main
 import Control.Exception    (throwIO)
 import Data.String          (IsString (..))
 import System.Environment   (getArgs)
-import Week06.Token.OnChain (tokenPolicy)
-import Week06.Utils         (unsafeReadTxOutRef, writeMintingPolicy)
+import Token.OnChain (tokenPolicy)
+import Utils         (unsafeReadTxOutRef, writeMintingPolicy)
 
 main :: IO ()
 main = do
