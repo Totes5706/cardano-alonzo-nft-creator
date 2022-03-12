@@ -2,11 +2,11 @@
 
 echo;
 #get location of the cardano node from the user
-read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' NODEPATH
+read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
 echo;
 
 #declare location of the node as an environment variable
-export CARDANO_NODE_SOCKET_PATH=$NODEPATH
+export CARDANO_NODE_SOCKET_PATH=$nodepath
 
 #specify from the user whether they are using either the testnet or mainnet and declare 
 echo Which Cardano network will you be using?
@@ -27,6 +27,9 @@ case $network in
         ;;
 esac
 echo You chose: $network;
+
+#declare network as an environment variable
+export MAGIC=$network
 echo;
 
 #get the NFT name and IPFS CID location from the user
@@ -38,6 +41,16 @@ echo;
 #create NFT file directory and change to that directory
 mkdir -p NFT
 cd NFT
+
+#create a testnet or mainet folder depending on the network choice
+if [ $MAGIC == '--mainnet' ] 
+then
+    mkdir -p mainnet
+    cd mainnet
+else    
+    mkdir -p testnet
+    cd testnet
+fi
 
 #create NFT folder for this specfic NFT and change to that directory
 mkdir -p $nftname
@@ -77,7 +90,7 @@ else
 fi
 echo;
 
-#generate payment recieve address for the transaction, asking user permission to replace if files already exist
+#generate payment receive address for the transaction, asking user permission to replace if files already exist
 if [ -f payment.addr ] 
 then
     echo Payment address already exists. Would you like to overwrite?
@@ -94,7 +107,7 @@ then
 
         cardano-cli address build \
             --payment-verification-key-file payment.vkey \
-            --out-file payment.addr $network
+            --out-file payment.addr $MAGIC
         ;;
     
     no)
@@ -106,18 +119,18 @@ else
 
     cardano-cli address build \
             --payment-verification-key-file payment.vkey \
-            --out-file payment.addr $network
+            --out-file payment.addr $MAGIC
 
 fi
 echo;
 
-#declare variable address - to be the recieve address of the newly created keys
-address=$(cat payment.addr)
+#declare variable address as environment variable - to be the recieve address of the newly created keys
+export ADDRESS=$(cat payment.addr)
 
 #output address to user so they can fund the wallet. Check if they are using mainnet or testnet to display the correct blockchain explorer link
 echo ;echo;
 echo ------------------------------------------------------
-echo payment address = $address
+echo payment address = $ADDRESS
 echo;
 echo Fund this address with ADA to get started.
 echo ------------------------------------------------------
@@ -128,10 +141,10 @@ addressfunded=false
 while [ $addressfunded == false ]
 do
     cardano-cli query utxo \
-        --address $address \
-        $network
+        --address $ADDRESS \
+        $MAGIC
     echo;
-    echo Is the address funded yet?
+    echo Has the address received ADA yet from a transfer?
 
     select isfunded in 'yes' 'no' 
     do
@@ -152,28 +165,18 @@ do
     esac
     
 done
-
-read -p "If the address contains enough ADA, Press enter to continue : "
 echo;
 
 #store utxo information to file
 cardano-cli query utxo \
-        --address $address \
-        $network \
+        --address $ADDRESS \
+        $MAGIC \
         --out-file utxoquery.txt
 
-#store the query information in two arrays, one for the TxId,TxIx; the second for the ADA balance
-#awk -F'"' '/#/{print $2}' utxoquery.txt
+#store the query utxo in an array, so we can prompt the user to select one
 array_txid=($(awk -F'"' '/#/{print $2}' utxoquery.txt))
-#array_lovelace = (awk -F'"' '/#/{print $2}' utxoquery.txt)
 
-#combine them into one array
-#for idx in "${!array_txid[@]}"; do 
-#    array_utxo[idx]=$(( array_txid[idx] + array_lovelace[idx] ))
-#done
-
-
-#Specify from the user which utxo to use
+#Specify from the user which utxo to use for minting
 echo Which utxo would you like to use?
 select txidix in "${array_txid[@]}".
  do
@@ -186,7 +189,7 @@ echo Generating protocol parameters into protocol.json
 echo;
 
 cardano-cli query protocol-parameters \
-    $network \
+    $MAGIC \
     --out-file protocol.json
 
 #generate the policyID files into a new folder called policy, asking user permission to replace if files already exist
@@ -224,8 +227,3 @@ else
 fi
 echo;
 
-# Extract uto - awk -F'"' '/#/{print $2}' query.txt 
-# Extact address - awk -F'"' '/address/{ print $4}' query.txt
-# Extract ADA value - awk '/lovelace/{ print $2}' query.txt
-
-# array=( $(awk -F ' ' '{ print $NF }' log filename) )
