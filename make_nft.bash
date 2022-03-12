@@ -1,53 +1,61 @@
 #!/bin/bash
 
 echo;
-#get location of the cardano node from the user
-read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
+#get location of the cardano node from the user if it is undefined
+if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
+then
+    read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
+    #declare location of the node as an environment variable
+    export CARDANO_NODE_SOCKET_PATH=$nodepath
+else
+    echo cardano-node socket location detected at: $CARDANO_NODE_SOCKET_PATH
+fi
 echo;
 
-#declare location of the node as an environment variable
-export CARDANO_NODE_SOCKET_PATH=$nodepath
-
-#specify from the user whether they are using either the testnet or mainnet and declare 
+#specify from the user whether they are using either the testnet or mainnet and save into variable magic
 echo Which Cardano network will you be using?
 
-select network in 'mainnet' 'testnet' 
+select magic in 'mainnet' 'testnet' 
 do
     break
 done
 
-case $network in
+case $magic in
 
     mainnet) 
-        network='--mainnet'
+        magic='--mainnet'
         ;;
     
     testnet)
-        network='--testnet-magic 1097911063' 
+        magic='--testnet-magic 1097911063' 
         ;;
 esac
-echo You chose: $network;
+echo You chose: $magic;
 
-#declare network as an environment variable
-export MAGIC=$network
 echo;
 
-#get the NFT name and IPFS CID location from the user
-read -p 'Enter of the NFT name you want to create (no spaces,numbers, or symbols) : ' tn
+#get the NFT name from the user
+read -p 'Enter of the NFT name you want to create (no spaces or special characters allowed) : ' tn
 echo;
-read -p 'Enter the unique IPFS CID associated with the NFT : ' ipfs_cid
-echo;
+
+#check for spaces and special characters
+re="[[:space:]]+"
+while [[ $tn = *[-@#$%'&'*=+]* ]] || [[ $tn =~ $re ]]
+do
+    read -p 'Token name not allowed, please enter again (no spaces or special characters allowed) : ' tn
+done
 
 #Since this is an NFT, we will only mint 1 token
 amt=1
 echo The number of tokens that will be minted is: $amt
+echo;
 
 #create NFT file directory and change to that directory
 mkdir -p NFT
 cd NFT
 
 #create a testnet or mainet folder depending on the network choice
-if [ $MAGIC == '--mainnet' ] 
+if [ "$magic" = '--mainnet' ] 
 then
     mkdir -p mainnet
     cd mainnet
@@ -111,7 +119,7 @@ then
 
         cardano-cli address build \
             --payment-verification-key-file payment.vkey \
-            --out-file payment.addr $MAGIC
+            --out-file payment.addr $magic
         ;;
     
     no)
@@ -123,18 +131,20 @@ else
 
     cardano-cli address build \
             --payment-verification-key-file payment.vkey \
-            --out-file payment.addr $MAGIC
+            --out-file payment.addr $magic
 
 fi
 echo;
 
-#declare variable address as environment variable - to be the recieve address of the newly created keys
-export ADDRESS=$(cat payment.addr)
+#declare variable address a- to be the receive address of the newly created keys
+address=$(cat payment.addr)
 
 #output address to user so they can fund the wallet. Check if they are using mainnet or testnet to display the correct blockchain explorer link
 echo ;echo;
 echo ------------------------------------------------------
-echo payment address = $ADDRESS
+echo You are currently set up on the $magic
+echo;
+echo payment address = $address
 echo;
 echo Fund this address with ADA to get started.
 echo ------------------------------------------------------
@@ -144,11 +154,11 @@ read -p "Once this address is funded, press enter to continue "
 
 #query the CLI at the address until we see the funds have arrived
 addressfunded=false
-while [ $addressfunded == false ]
+while [ $addressfunded = false ]
 do
     cardano-cli query utxo \
-        --address $ADDRESS \
-        $MAGIC
+        --address $address \
+        $magic
     echo;
     echo Has the ADA appeared above inside the utxo?
 
@@ -175,8 +185,8 @@ echo;
 
 #store utxo information to file
 cardano-cli query utxo \
-        --address $ADDRESS \
-        $MAGIC \
+        --address $address \
+        $magic \
         --out-file utxoquery.txt
 
 #store the query utxo in an array, so we can prompt the user to select one
@@ -184,7 +194,7 @@ array_txid=($(awk -F'"' '/#/{print $2}' utxoquery.txt))
 
 #Specify from the user which utxo to use for minting
 echo Which utxo would you like to use?
-select oref in "${array_txid[@]}".
+select oref in "${array_txid[@]}"
  do
     break
 done
@@ -195,99 +205,98 @@ echo Generating protocol parameters into protocol.json
 echo;
 
 cardano-cli query protocol-parameters \
-    $MAGIC \
+    $magic \
     --out-file protocol.json
 
-#create new policy file token.plutus in new directory policy
-echo Generating NFT policy into protocol.json
+#generate unit.json file for the mint reedeemer in the transaction build
+echo Generating unit.json
+echo "{\"fields\":[],\"constructor\":0}" > unit.json 
+echo;
+
+#create policy file to store policy files
+mkdir -p policy
+
+#create new policy file in the new directory policy
+echo Generating NFT policy using the following parameters:
 echo;
 
 policyFile=policy/token.plutus
+
+echo Token Name : $tn
+echo Tokens Minted : $amt
+echo UTXO : $oref
+echo Address : $address
+echo Policy File Directory : $policyFile 
+echo;
+
+#Send these four parameters to the on-chain code of Token.Onchain.hs to create the policy for the NFT
 cabal exec token-policy $policyFile $oref $amt $tn
 
-echo $policyFile
+#create a signed and unsigned file to prepare for the Cardano-CLI transaction build/sign
+unsignedFile=tx.unsigned
+signedFile=tx.signed
 
+#create a policyid using the CLI
+pid=$(cardano-cli transaction policyid --script-file $policyFile)
 
+#convert the Token Name into hexadecimal format so the CLI can interpet it:
+tnHex=$(cabal exec token-name -- $tn)
 
+#compute the unique minted value based off the amount, policyid, and token name
+v="$amt $pid.$tnHex"
 
+#Build the transaction using the parameters from above
+cardano-cli transaction build \
+    $magic \
+    --tx-in $oref \
+    --tx-in-collateral $oref \
+    --tx-out "$address + 1500000 lovelace + $v" \
+    --mint "$v" \
+    --mint-script-file $policyFile \
+    --mint-redeemer-file unit.json \
+    --change-address $address \
+    --protocol-params-file protocol.json \
+    --out-file $unsignedFile \
 
+#Sign the transaction using the parameters from above
+cardano-cli transaction sign \
+    --tx-body-file $unsignedFile \
+    --signing-key-file payment.skey \
+    $magic \
+    --out-file $signedFile
 
+#Submit the transaction
+cardano-cli transaction submit \
+    $magic \
+    --tx-file $signedFile
 
+#check to see if the tokens arrived before the script closes
+tokenfunded=false
+while [ $tokenfunded = false ]
+do
+    cardano-cli query utxo \
+        --address $address \
+        $magic
+    echo;
+    echo Has the token arrived in the wallet above?
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<<'###BLOCK-COMMENT'
-generate the policyID files into a new folder called policy, asking user permission to replace if files already exist
-mkdir -p policy
-
-if [ -f "policy/policy.skey" ] || [-f "policy/policy.vkey" ] 
-then
-    echo Policy key files already exist. Would you like to overwrite?
-
-    select overwrite in 'yes' 'no' 
+    select istoken in 'yes' 'no' 
     do
         break
     done
 
-    case $overwrite in
+    case $istoken in
 
-    yes) 
-        echo Generating policy/policy.vkey and policy/policy.skey files
-
-        cardano-cli address key-gen \
-            --verification-key-file policy/policy.vkey \
-            --signing-key-file policy/policy.skey 
+    yes)
+        tokenfunded=true
+        
         ;;
     
     no)
-        echo Original policy files left unchanged
+        echo;
+        echo token has not arrived, querying the blockchain again...
+        echo;
         ;;
     esac
-else 
-    echo Generating payment.vkey and payment.skey files
-
-    cardano-cli address key-gen \
-        --verification-key-file policy/policy.vkey \
-        --signing-key-file policy/policy.skey  
-fi
-echo;
-###BLOCK-COMMENT
+    
+done
