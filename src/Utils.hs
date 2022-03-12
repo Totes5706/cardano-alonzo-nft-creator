@@ -1,7 +1,7 @@
 {-# LANGUAGE GADTs            #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Week06.Utils
+module Utils
     ( tryReadAddress, unsafeReadAddress
     , tryReadWalletId, unsafeReadWalletId
     , unsafeReadTxOutRef
