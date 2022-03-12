@@ -11,7 +11,7 @@
 {-# LANGUAGE TypeFamilies        #-}
 {-# LANGUAGE TypeOperators       #-}
 
-module Week06.Token.OnChain
+module Token.OnChain
     ( tokenPolicy
     , tokenCurSymbol
     ) where
