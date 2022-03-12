@@ -33,10 +33,14 @@ export MAGIC=$network
 echo;
 
 #get the NFT name and IPFS CID location from the user
-read -p 'Enter of the NFT name you want to create (no spaces) : ' nftname
+read -p 'Enter of the NFT name you want to create (no spaces,numbers, or symbols) : ' tn
 echo;
 read -p 'Enter the unique IPFS CID associated with the NFT : ' ipfs_cid
 echo;
+
+#Since this is an NFT, we will only mint 1 token
+amt=1
+echo The number of tokens that will be minted is: $amt
 
 #create NFT file directory and change to that directory
 mkdir -p NFT
@@ -52,9 +56,9 @@ else
     cd testnet
 fi
 
-#create NFT folder for this specfic NFT and change to that directory
-mkdir -p $nftname
-cd $nftname
+#create folder for this specfic token name and change to that directory
+mkdir -p $tn
+cd $tn
 
 #generate vrf keys .vkey and .skey for the transaction, asking user permission to replace if files already exist
 if [ -f payment.skey ] || [-f payment.vkey ] 
@@ -136,6 +140,8 @@ echo Fund this address with ADA to get started.
 echo ------------------------------------------------------
 echo ;echo;
 
+read -p "Once this address is funded, press enter to continue "
+
 #query the CLI at the address until we see the funds have arrived
 addressfunded=false
 while [ $addressfunded == false ]
@@ -144,7 +150,7 @@ do
         --address $ADDRESS \
         $MAGIC
     echo;
-    echo Has the address received ADA yet from a transfer?
+    echo Has the ADA appeared above inside the utxo?
 
     select isfunded in 'yes' 'no' 
     do
@@ -178,7 +184,7 @@ array_txid=($(awk -F'"' '/#/{print $2}' utxoquery.txt))
 
 #Specify from the user which utxo to use for minting
 echo Which utxo would you like to use?
-select txidix in "${array_txid[@]}".
+select oref in "${array_txid[@]}".
  do
     break
 done
@@ -192,7 +198,65 @@ cardano-cli query protocol-parameters \
     $MAGIC \
     --out-file protocol.json
 
-#generate the policyID files into a new folder called policy, asking user permission to replace if files already exist
+#create new policy file token.plutus in new directory policy
+echo Generating NFT policy into protocol.json
+echo;
+
+policyFile=policy/token.plutus
+cabal exec token-policy $policyFile $oref $amt $tn
+
+echo $policyFile
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<<'###BLOCK-COMMENT'
+generate the policyID files into a new folder called policy, asking user permission to replace if files already exist
 mkdir -p policy
 
 if [ -f "policy/policy.skey" ] || [-f "policy/policy.vkey" ] 
@@ -226,4 +290,4 @@ else
         --signing-key-file policy/policy.skey  
 fi
 echo;
-
+###BLOCK-COMMENT
