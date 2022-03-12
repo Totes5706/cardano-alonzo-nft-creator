@@ -2,13 +2,7 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Utils
-    ( tryReadAddress, unsafeReadAddress
-    , tryReadWalletId, unsafeReadWalletId
-    , unsafeReadTxOutRef
-    , writeJSON, writeUnit
-    , contractActivationArgs
-    , getCredentials, unsafePaymentPubKeyHash, unsafeStakePubKeyHash
-    , cidToString
+    ( unsafeReadTxOutRef
     , writeMintingPolicy
     , unsafeTokenNameToHex
     ) where
