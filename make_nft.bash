@@ -1,11 +1,28 @@
 #!/bin/bash
 
+# Welcome to the Cardano Alonzo NFT Creator
+#
+# Contributed by Joe Totes - Plutus Pioneers Cohort 3 - https://github.com/Totes5706
+#
+# This script creates the validation keys and addresses, and passes the parameters through haskell/plutus validation.
+# It takes the plutus policy from the validation and submits the results to the cardano-cli
+# The plutus policy ensures only 1 token is minted. If there are attempts from a bad actor to alter the off-chain code, the transaction will fail
+#
+# Requirements:
+#
+# 1) Nix-shell
+# 2) Fully synced cardano node
+#
+# This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
+
+
+
 echo;
 #get location of the cardano node from the user if it is undefined
 if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
 then
     read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
-    #declare location of the node as an environment variable
+    #save nodepath as environment variable, so user can re-mint without having to reinput directory
     export CARDANO_NODE_SOCKET_PATH=$nodepath
 else
     echo cardano-node socket location detected at: $CARDANO_NODE_SOCKET_PATH
@@ -38,6 +55,7 @@ echo;
 read -p 'Enter of the NFT name you want to create (no spaces or special characters allowed) : ' tn
 echo;
 
+
 #check for spaces and special characters
 re="[[:space:]]+"
 while [[ $tn = *[-@#$%'&'*=+]* ]] || [[ $tn =~ $re ]]
@@ -45,7 +63,8 @@ do
     read -p 'Token name not allowed, please enter again (no spaces or special characters allowed) : ' tn
 done
 
-#Since this is an NFT, we will only mint 1 token
+#Since this is an NFT, we will only mint 1 token. Changing this value to anything greater then 1 will result in the transaction failing
+#The plutus policy on-chain code acts as a validator, so any actor trying to force more than one token will cause this script to fail as intended
 amt=1
 echo The number of tokens that will be minted is: $amt
 echo;
@@ -69,9 +88,9 @@ mkdir -p $tn
 cd $tn
 
 #generate vrf keys .vkey and .skey for the transaction, asking user permission to replace if files already exist
-if [ -f payment.skey ] || [-f payment.vkey ] 
+if [ -f payment.skey ] || [ -f payment.vkey ] 
 then
-    echo VRF key files already exist. Would you like to overwrite?
+    echo Warning, payment.skey and payment.vkey files already exist for the token $tn . Would you like to overwrite? Make sure to backup these files before replacing them.
 
     select overwrite in 'yes' 'no' 
     do
@@ -105,7 +124,7 @@ echo;
 #generate payment receive address for the transaction, asking user permission to replace if files already exist
 if [ -f payment.addr ] 
 then
-    echo Payment address already exists. Would you like to overwrite?
+    echo Warning, payment address payment.addr already exists for the token $tn . Would you like to overwrite? Make sure to backup these files before replacing them.
 
     select overwrite in 'yes' 'no' 
     do
@@ -136,7 +155,7 @@ else
 fi
 echo;
 
-#declare variable address a- to be the receive address of the newly created keys
+#declare variable address to be the receive address of the new key pair
 address=$(cat payment.addr)
 
 #output address to user so they can fund the wallet. Check if they are using mainnet or testnet to display the correct blockchain explorer link
@@ -160,7 +179,7 @@ do
         --address $address \
         $magic
     echo;
-    echo Has the ADA appeared above inside the utxo?
+    echo Has the ADA appeared in the address above, inside the utxo?
 
     select isfunded in 'yes' 'no' 
     do
@@ -171,6 +190,7 @@ do
 
     yes)
         addressfunded=true
+
         ;;
     
     no)
@@ -189,7 +209,7 @@ cardano-cli query utxo \
         $magic \
         --out-file utxoquery.txt
 
-#store the query utxo in an array, so we can prompt the user to select one
+#store the query utxo in an array, so we can prompt the user to select the proper utxo
 array_txid=($(awk -F'"' '/#/{print $2}' utxoquery.txt))
 
 #Specify from the user which utxo to use for minting
@@ -229,8 +249,8 @@ echo Address : $address
 echo Policy File Directory : $policyFile 
 echo;
 
-#Send these four parameters to the on-chain code of Token.Onchain.hs to create the policy for the NFT
-cabal exec token-policy $policyFile $oref $amt $tn
+#Send these four parameters to the on-chain code of Token.Onchain.hs to validate, then create the policy for the NFT
+cabal exec token-policy $policyFile $oref $tn
 
 #create a signed and unsigned file to prepare for the Cardano-CLI transaction build/sign
 unsignedFile=tx.unsigned
@@ -239,13 +259,13 @@ signedFile=tx.signed
 #create a policyid using the CLI
 pid=$(cardano-cli transaction policyid --script-file $policyFile)
 
-#convert the Token Name into hexadecimal format so the CLI can interpet it:
+#convert the token name into hexadecimal format using haskell, so the CLI can interpet it:
 tnHex=$(cabal exec token-name -- $tn)
 
 #compute the unique minted value based off the amount, policyid, and token name
 v="$amt $pid.$tnHex"
 
-#Build the transaction using the parameters from above
+#build the transaction using the parameters from above
 cardano-cli transaction build \
     $magic \
     --tx-in $oref \
@@ -258,19 +278,19 @@ cardano-cli transaction build \
     --protocol-params-file protocol.json \
     --out-file $unsignedFile \
 
-#Sign the transaction using the parameters from above
+#sign the transaction using the parameters from above
 cardano-cli transaction sign \
     --tx-body-file $unsignedFile \
     --signing-key-file payment.skey \
     $magic \
     --out-file $signedFile
 
-#Submit the transaction
+#submit the transaction
 cardano-cli transaction submit \
     $magic \
     --tx-file $signedFile
 
-#check to see if the tokens arrived before the script closes
+#check to see if the token arrived before the script closes
 tokenfunded=false
 while [ $tokenfunded = false ]
 do

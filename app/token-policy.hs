@@ -5,16 +5,15 @@ module Main
 import Control.Exception    (throwIO)
 import Data.String          (IsString (..))
 import System.Environment   (getArgs)
-import Token.OnChain (tokenPolicy)
+import Token.OnChain (nftPolicy)
 import Utils         (unsafeReadTxOutRef, writeMintingPolicy)
 
 main :: IO ()
 main = do
-    [file, oref', amt', tn'] <- getArgs
+    [file, oref', tn'] <- getArgs
     let oref = unsafeReadTxOutRef oref'
-        amt  = read amt'
         tn   = fromString tn'
-        p    = tokenPolicy oref tn amt
+        p    = nftPolicy oref tn
     e <- writeMintingPolicy file p
     case e of
         Left err -> throwIO $ userError $ show err
