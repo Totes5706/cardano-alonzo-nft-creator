@@ -12,8 +12,8 @@
 {-# LANGUAGE TypeOperators       #-}
 
 module Token.OnChain
-    ( tokenPolicy
-    , tokenCurSymbol
+    ( nftPolicy
+    , nftCurSymbol
     ) where
 
 import qualified PlutusTx
@@ -22,10 +22,10 @@ import           Ledger                      hiding (mint, singleton)
 import qualified Ledger.Typed.Scripts        as Scripts
 import           Ledger.Value                as Value
 
-{-# INLINABLE mkTokenPolicy #-}
-mkTokenPolicy :: TxOutRef -> TokenName -> Integer -> () -> ScriptContext -> Bool
-mkTokenPolicy oref tn amt () ctx = traceIfFalse "UTxO not consumed"   hasUTxO           &&
-                                   traceIfFalse "wrong amount minted" checkMintedAmount
+{-# INLINABLE mkNftPolicy #-}
+mkNftPolicy :: TxOutRef -> TokenName -> () -> ScriptContext -> Bool
+mkNftPolicy oref tn () ctx = traceIfFalse "UTxO not consumed"   hasUTxO           &&
+                             traceIfFalse "wrong amount minted" checkMintedAmount
   where
     info :: TxInfo
     info = scriptContextTxInfo ctx
@@ -35,18 +35,16 @@ mkTokenPolicy oref tn amt () ctx = traceIfFalse "UTxO not consumed"   hasUTxO   
 
     checkMintedAmount :: Bool
     checkMintedAmount = case flattenValue (txInfoMint info) of
-        [(_, tn', amt')] -> tn' == tn && amt' == amt
-        _                -> False
+        [(_, tn', amt)] -> tn' == tn && amt == 1
+        _               -> False
 
-tokenPolicy :: TxOutRef -> TokenName -> Integer -> Scripts.MintingPolicy
-tokenPolicy oref tn amt = mkMintingPolicyScript $
-    $$(PlutusTx.compile [|| \oref' tn' amt' -> Scripts.wrapMintingPolicy $ mkTokenPolicy oref' tn' amt' ||])
+nftPolicy :: TxOutRef -> TokenName -> Scripts.MintingPolicy
+nftPolicy oref tn = mkMintingPolicyScript $
+    $$(PlutusTx.compile [|| \oref' tn' -> Scripts.wrapMintingPolicy $ mkNftPolicy oref' tn' ||])
     `PlutusTx.applyCode`
     PlutusTx.liftCode oref
     `PlutusTx.applyCode`
     PlutusTx.liftCode tn
-    `PlutusTx.applyCode`
-    PlutusTx.liftCode amt
 
-tokenCurSymbol :: TxOutRef -> TokenName -> Integer -> CurrencySymbol
-tokenCurSymbol oref tn = scriptCurrencySymbol . tokenPolicy oref tn
+nftCurSymbol :: TxOutRef -> TokenName -> CurrencySymbol
+nftCurSymbol oref tn = scriptCurrencySymbol $ nftPolicy oref tn

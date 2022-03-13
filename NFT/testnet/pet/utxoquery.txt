@@ -1,0 +1,17 @@
+{
+    "7d3dc767875663e5521aa18ce96d19b0ae34563b9516a43c5b43ed086e684186#0": {
+        "address": "addr_test1vzl50kt8m29xdsymjxf0848mzdfmvrlvjye892t2zhhuzhcpl8ca3",
+        "value": {
+            "lovelace": 13156707
+        }
+    },
+    "7d3dc767875663e5521aa18ce96d19b0ae34563b9516a43c5b43ed086e684186#1": {
+        "address": "addr_test1vzl50kt8m29xdsymjxf0848mzdfmvrlvjye892t2zhhuzhcpl8ca3",
+        "value": {
+            "lovelace": 1500000,
+            "55a8c757687e4b90262e2ed2f45ad710389caa934f0feb0a525534de": {
+                "706574": 1
+            }
+        }
+    }
+}
