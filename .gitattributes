@@ -1,0 +1,4 @@
+*.hs linguist-detectable=true
+*.bash linguist-detectable=true
+*.sh linguist-detectable=true
+*.h linguist-detectable=false

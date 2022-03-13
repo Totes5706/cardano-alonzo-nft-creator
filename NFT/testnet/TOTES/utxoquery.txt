@@ -1,8 +1,0 @@
-{
-    "fe26285f1be79a649b74834bf67f408b58e66b2cab436418631841ea4dc70e6d#0": {
-        "address": "addr_test1vzxglcewq0q7sjzvnp26p69v6d24jkp6yduwqdxfx23un9g0nrcg9",
-        "value": {
-            "lovelace": 30000000
-        }
-    }
-}
