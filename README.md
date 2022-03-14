@@ -123,10 +123,9 @@ totinj@penguin:~$ ./start-mainet-node
 
 ## How to Use the NFT Maker
 
+First, make sure your cardano-node is running and fully synced.
 
-In order to run the NFT script, first ensure you have plutus-apps repo from IOHK cloned and also this repo.
-
-
+Second, ensure you have plutus-apps repo from IOHK cloned and also this repo.
 If you do not, clone plutus-apps repo from IOHK by the following:
 
 ```
