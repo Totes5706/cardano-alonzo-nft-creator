@@ -10,7 +10,7 @@
 #
 # Requirements:
 #
-# 1) Nix-shell
+# 1) Nix-shell - Using git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244 in the plutus-apps directory of the IOHK repo
 # 2) Fully synced cardano node
 #
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
@@ -18,12 +18,24 @@
 
 
 echo;
-#get location of the cardano node from the user if it is undefined
+echo ------------------------------------------------------
+echo Welcome to the Cardano Alonzo NFT Creator!
+echo ------------------------------------------------------
+echo;
+
+#get location of the cardano node from the user if it is undefined. Also check if they entered the correct directory.
 if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
 then
-    read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
-    #save nodepath as environment variable, so user can re-mint without having to reinput directory
-    export CARDANO_NODE_SOCKET_PATH=$nodepath
+    while true ; do
+        read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
+        if [ -e "${nodepath}" ]; then
+            export CARDANO_NODE_SOCKET_PATH=$nodepath
+            echo cardano-node socket location found at: $CARDANO_NODE_SOCKET_PATH
+            break
+        else
+            echo "Location of node socket not found, please re-enter"
+        fi
+    done
 else
     echo cardano-node socket location detected at: $CARDANO_NODE_SOCKET_PATH
 fi
