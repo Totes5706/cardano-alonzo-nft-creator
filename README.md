@@ -292,21 +292,15 @@ Which utxo would you like to use (enter number selection)?
 ```
 
 ```
-Would you like this NFT minted in this address, or have it transfered to another address?
+Do you want the NFT minted in this address, or have it transfered to another address?
 1) Keep the NFT in this address
 2) Transfer the NFT to a recipient address
 #? 2
 ```
 
 ```
-Would you like this NFT minted in this address, or have it transfered to another address?
-1) Keep the NFT in this address
-2) Transfer the NFT to a recipient address
-#? 2
-```
-
-```
-Enter the recipient address you want to send to (no spaces or special characters allowed): addr_test1qp080kw89tmt5jmp3m54qnu5edxfjyh966ylezf0e2syzcw7h0jw8jsptmz6zgv45kzmhf9gn6l75t0xjkz6rlt69qzqffjzds
+Enter the recipient address you want to send to (no spaces or special characters allowed):
+addr_test1qp080kw89tmt5jmp3m54qnu5edxfjyh966ylezf0e2syzcw7h0jw8jsptmz6zgv45kzmhf9gn6l75t0xjkz6rlt69qzqffjzds
 ```
 
 ```
