@@ -22,7 +22,7 @@ This script creates the validation keys and addresses, and passes the parameters
 
 In order to run the bash script, two dependencies are needed:
 
-- nix needs to be installed in order to use the proper git commit for nix shell
+- nix needs to be installed in order to use the proper git commit for nix-shell
 - the cardano node must be fully synced
 
 If you are in the Plutus Pioneer Program, these should already be installed. If not, follow along the next two subsections for the how to installation.
@@ -100,7 +100,7 @@ You should now be on the proper git branch and can run nix-shell in this directo
 totinj@penguin:~/plutus-apps$ nix-shell
 ```
 
-This is run for the first time, it will take some time to build (30min + for a non-workstation computer).
+If this is run for the first time, it will take some time to build (30min + for a non-workstation computer).
 
 While in nix-shell, head to the node directory inside this repo that we just cloned:
 
