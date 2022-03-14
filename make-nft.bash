@@ -16,6 +16,8 @@
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
 
 
+
+
 echo;
 echo ------------------------------------------------------
 echo Welcome to the Cardano Alonzo NFT Creator!
@@ -282,7 +284,6 @@ echo Address : $address
 echo Policy Id : $pid
 echo v : $v
 echo Policy File Directory : $policyFile 
-export CARDANO_NODE_SOCKET_PATH="$nodepath"
 echo;
 
 #build the transaction using the parameters from above
@@ -313,6 +314,7 @@ cardano-cli transaction submit \
 echo;
 
 read -p "Transaction has been submitted, press enter to query the address for the new token "
+
 #check to see if the token arrived before the script closes
 tokenfunded=false
 while [ $tokenfunded = false ]
@@ -342,3 +344,5 @@ do
     esac
     
 done
+
+echo Process Completed
