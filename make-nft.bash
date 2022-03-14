@@ -10,7 +10,7 @@
 #
 # Requirements:
 #
-# 1) Nix-shell
+# 1) Nix-shell - Using git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244 in the plutus-apps directory of the IOHK repo
 # 2) Fully synced cardano node
 #
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
