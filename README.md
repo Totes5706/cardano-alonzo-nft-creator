@@ -54,15 +54,6 @@ We can now install Nix single user install. Run:
 sh <(curl -L https://nixos.org/nix/install) --no-daemon
 ```
 
-
-```
-Output:
-Installation finished!  To ensure that the necessary environment
-variables are set, either log in again, or type
-  . /home/totinj/.nix-profile/etc/profile.d/nix.sh
-```
-
-
 Now to finish, we need to set the environment with the following command notice from above.
 Very important here to replace ```totinj``` with your current Linux user!!
 
