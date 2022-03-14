@@ -242,18 +242,20 @@ echo;
 #ask the user where the token would be sent
 echo Would you like this NFT minted in this address, or have it transfered to another address?
 
-select sendto in 'Mint the NFT in this address' 'Transfer the NFT to a recipient address' 
+select sendto in 'Keep the NFT in this address' 'Transfer the NFT to a recipient address' 
 do
     break
 done
 
 case $sendto in
 
-'Mint the NFT in this address')
+'Keep the NFT in this address')
     sendaddress=$address
+    changeaddress=$address
     ;;
     
 'Transfer the NFT to a recipient address')
+    echo;
     read -p 'Enter the recipient address you want to send to (no spaces or special characters allowed): ' sendaddress
     echo;
 
@@ -263,6 +265,25 @@ case $sendto in
     do
         read -p 'Address name not allowed, please enter again (no spaces or special characters allowed) : ' sendaddress
     done
+
+    #ask the user if the remaining ADA be sent to the recipient
+    echo 'Do you want the left over ADA (extra change) be sent to the recipient as well?'
+
+    select change in 'Keep remaining ADA in this address' 'Transfer remaining ADA to the recipient with the NFT' 
+    do
+        break
+    done
+
+    case $change in
+
+    'Keep remaining ADA in this address')
+        changeaddress=$address
+        ;;
+    
+    'Transfer remaining ADA to the recipient with the NFT')
+        changeaddress=$sendaddress
+        ;;
+    esac
     ;;
 esac
     
@@ -326,7 +347,7 @@ cardano-cli transaction build \
     --mint "$v" \
     --mint-script-file $policyFile \
     --mint-redeemer-file unit.json \
-    --change-address $address \
+    --change-address $changeaddress \
     --protocol-params-file protocol.json \
     --out-file $unsignedFile \
 
