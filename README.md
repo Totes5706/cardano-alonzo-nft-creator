@@ -142,6 +142,14 @@ totinj@penguin:~$ git clone https://github.com/Totes5706/cardano-alonzo-nft-crea
 Head to the plutus-apps directory and update it to the current git tag:
 
 ```
+totinj@penguin:~/plutus-apps$ git checkout main
+```
+
+```
+totinj@penguin:~/plutus-apps$ git pull
+```
+
+```
 totinj@penguin:~/plutus-apps$ git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244
 ```
 
