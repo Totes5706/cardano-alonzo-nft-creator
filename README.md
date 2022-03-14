@@ -102,6 +102,24 @@ totinj@penguin:~/plutus-apps$ nix-shell
 
 This is run for the first time, it will take some time to build (30min + for a non-workstation computer).
 
+While in nix-shell, head to the node directory inside this repo that we just cloned:
+
+```
+[nix-shell:~/cardano-alonzo-nft-creator/node]$ ./make-nft.bash
+```
+
+Here, you can now sync either the mainnet or testnet using the scripts:
+
+
+```
+totinj@penguin:~$ ./start-testnet-node
+```
+
+```
+totinj@penguin:~$ ./start-mainet-node
+```
+
+
 
 ## How to Use the NFT Maker
 
