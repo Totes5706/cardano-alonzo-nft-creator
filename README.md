@@ -34,6 +34,7 @@ First, Open up the terminal to get started. We will first install the necessary 
 We need to install Nix and get it configured properly to use IOG’s caches. In this guide we will be doing a single user install.
 Before we can install Nix, we need to make sure the version of Linux you are using has both curl and git installed. First run:
 
+Directory: ```totinj@penguin:~$```
 ```
 totinj@penguin:~$ 
 sudo sh -c 'apt update && apt install curl'
