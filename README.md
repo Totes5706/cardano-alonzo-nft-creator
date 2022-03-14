@@ -232,13 +232,6 @@ Which Cardano network will you be using?
 ```
 
 ```
-Which Cardano network will you be using?
-1) mainnet
-2) testnet
-#? 2
-```
-
-```
 You chose: --testnet-magic 1097911063
 
 Enter of the NFT name you want to create (no spaces or special characters allowed) : IOHK
