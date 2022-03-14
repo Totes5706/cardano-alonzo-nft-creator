@@ -16,6 +16,8 @@
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
 
 
+
+
 echo;
 echo ------------------------------------------------------
 echo Welcome to the Cardano Alonzo NFT Creator!
@@ -202,26 +204,26 @@ do
     echo;
     echo The following utxos have been found. Query the address again?
 
-    select isfunded in 'yes' 'no' 
+    select isfunded in 'Query address again' 'Continue to mint' 
     do
         break
     done
 
     case $isfunded in
 
-    yes)
+    'Query address again')
         echo;
         echo Address not funded yet, querying the blockchain again...
         echo;
         ;;
     
-    no)
+    'Continue to mint')
         if [ -n "$array_txid" ] 
         then
             addressfunded=true
         else 
             echo;
-            echo Error! No utxos have been found at the address! Please fund the address and try again.
+            echo Error! No utxos have been found at the address! Please fund the address or wait for the funds to arrive.
         fi
         ;;
     esac
@@ -230,11 +232,41 @@ done
 echo;
 
 #Specify from the user which utxo to use for minting
-echo Which utxo would you like to use?
+echo 'Which utxo would you like to use (enter number selection)?'
 select oref in "${array_txid[@]}"
  do
     break
 done
+echo;
+
+#ask the user where the token would be sent
+echo Would you like this NFT minted in this address, or have it transfered to another address?
+
+select sendto in 'Mint the NFT in this address' 'Transfer the NFT to a recipient address' 
+do
+    break
+done
+
+case $sendto in
+
+'Mint the NFT in this address')
+    sendaddress=$address
+    ;;
+    
+'Transfer the NFT to a recipient address')
+    read -p 'Enter the recipient address you want to send to (no spaces or special characters allowed): ' sendaddress
+    echo;
+
+    #check for spaces and special characters
+    re="[[:space:]]+"
+    while [[ $sendaddress = *[-@#$%'&'*=+]* ]] || [[ $sendaddress =~ $re ]]
+    do
+        read -p 'Address name not allowed, please enter again (no spaces or special characters allowed) : ' sendaddress
+    done
+    ;;
+esac
+    
+
 echo;
 
 #query the protocol parameters and save them into the file protocol.json
@@ -279,6 +311,7 @@ echo Token Name Hex : $tnHex
 echo Tokens Minted : $amt
 echo UTXO : $oref
 echo Address : $address
+echo Recipient NFT Address: $sendaddress
 echo Policy Id : $pid
 echo v : $v
 echo Policy File Directory : $policyFile 
@@ -289,7 +322,7 @@ cardano-cli transaction build \
     $magic \
     --tx-in $oref \
     --tx-in-collateral $oref \
-    --tx-out "$address + 1500000 lovelace + $v" \
+    --tx-out "$sendaddress + 1500000 lovelace + $v" \
     --mint "$v" \
     --mint-script-file $policyFile \
     --mint-redeemer-file unit.json \
@@ -311,33 +344,47 @@ cardano-cli transaction submit \
 
 echo;
 
-read -p "Transaction has been submitted, press enter to query the address for the new token "
+read -p "Transaction has been submitted, press enter to query the local address "
 
 #check to see if the token arrived before the script closes
-tokenfunded=false
-while [ $tokenfunded = false ]
+nftarrived=false
+while [ $nftarrived = false ]
 do
+    echo;
+    echo Local Address: $address 
+    echo;
+
     cardano-cli query utxo \
         --address $address \
         $magic
-    echo;
-    echo The following utxos have been found. Query the address again?
 
-    select istoken in 'yes' 'no' 
+    echo;
+    echo;
+    echo Recipient Address: $sendaddress
+    echo;
+
+    cardano-cli query utxo \
+        --address $sendaddress \
+        $magic
+    
+    echo;
+    echo The following utxos have been found. What would you like to do?
+
+    select isquery in 'Query addresses again' 'Exit'
     do
         break
     done
 
-    case $istoken in
+    case $isquery in
 
-    yes)
+    'Query addresses again')
         echo;
         echo Querying the blockchain again...
         echo;
         ;;
-    
-    no)
-        tokenfunded=true
+
+    'Exit')
+        nftarrived=true
         ;;
     esac
     
