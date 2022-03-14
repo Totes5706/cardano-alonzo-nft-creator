@@ -15,6 +15,9 @@
 #
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
 
+
+
+
 echo;
 echo ------------------------------------------------------
 echo Welcome to the Cardano Alonzo NFT Creator!
@@ -22,29 +25,15 @@ echo ------------------------------------------------------
 echo;
 
 
-<<<<<<< HEAD:make-nft.bash
-echo;
-echo ------------------------------------------------------
-echo Welcome to the Cardano Alonzo NFT Creator!
-echo ------------------------------------------------------
-echo;
-
-=======
->>>>>>> 69533dda16c924193187f17fc07cc2d03ee39bb3:make_nft.bash
 #get location of the cardano node from the user if it is undefined. Also check if they entered the correct directory.
 if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
 then
     while true ; do
         read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
         if [ -e "${nodepath}" ]; then
-<<<<<<< HEAD:make-nft.bash
-            export CARDANO_NODE_SOCKET_PATH=$nodepath
-            echo cardano-node socket location found at: $CARDANO_NODE_SOCKET_PATH
-=======
             echo;
             echo cardano-node socket location found at: $nodepath
             export CARDANO_NODE_SOCKET_PATH=$nodepath
->>>>>>> 69533dda16c924193187f17fc07cc2d03ee39bb3:make_nft.bash
             break
         else
             echo "Location of node socket not found, please re-enter"
