@@ -1,4 +1,4 @@
-# Testnet and Mainnet scripts for starting a node
+# Testnet and Mainnet Scripts for Starting a Node
 
 These two scripts are used to download either the testnet or the mainnet for the Cardano Blockchain. 
 You must either be in nix-shell, or have the necessary dependencies to run cardano-node. 
