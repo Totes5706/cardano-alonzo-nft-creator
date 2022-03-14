@@ -185,4 +185,120 @@ We are now ready to start using the NFT maker! To start the script, in this dire
 
 ## Sample Output
 
+First making sure the node is synced:
+
+![Screenshot from 2022-03-13 21-31-50](https://user-images.githubusercontent.com/59018247/158090008-4adf91cc-2711-4987-a49f-d314c39c0f81.png)
+
+
+```
+[nix-shell:~/cardano-alonzo-nft-creator]$ ./make-nft.bash
+```
+
+```
+Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): 
+/home/totinj/DriveTwo/cardano/cnode/sockets/node0.socket
+```
+
+```
+Which Cardano network will you be using?
+1) mainnet
+2) testnet
+#? 2
+```
+
+```
+You chose: --testnet-magic 1097911063
+
+Enter of the NFT name you want to create (no spaces or special characters allowed) : IOHK
+```
+
+```
+The number of tokens that will be minted is: 1
+
+Generating payment.vkey and payment.skey files
+
+
+Generating payment address into payment.addr
+
+
+
+------------------------------------------------------
+You are currently set up on the --testnet-magic 1097911063
+
+payment address = addr_test1vzs70ggma9r8mnts9hf2h7vy0wj5s7w8lr67tkhgwjmqy6qmlkeq3
+
+Fund this address with ADA to get started.
+------------------------------------------------------
+
+
+Once this address is funded, press enter to continue 
+```
+
+![Screenshot 2022-03-13 at 21-40-09 Faucet](https://user-images.githubusercontent.com/59018247/158090547-c60c5add-da1d-4317-9e82-0aeab9b3eaaa.png)
+
+
+```
+                           TxHash                                 TxIx        Amount
+--------------------------------------------------------------------------------------
+bfb661a52c4ccca70722396de02b14746327312235ab3990bcccf62ea0496ee7     0        1000000000 lovelace + TxOutDatumNone
+
+Has the ADA appeared in the address above, inside the utxo?
+1) yes
+2) no
+#? 1
+```
+
+```
+Which utxo would you like to use?
+1) bfb661a52c4ccca70722396de02b14746327312235ab3990bcccf62ea0496ee7#0
+#? 1
+```
+
+```
+Generating protocol parameters into protocol.json
+
+Generating unit.json
+
+Generating NFT policy using the following parameters:
+
+Token Name : IOHK
+Tokens Minted : 1
+UTXO : bfb661a52c4ccca70722396de02b14746327312235ab3990bcccf62ea0496ee7#0
+Address : addr_test1vzs70ggma9r8mnts9hf2h7vy0wj5s7w8lr67tkhgwjmqy6qmlkeq3
+Policy File Directory : policy/token.plutus
+
+Estimated transaction fee: Lovelace 343314
+Transaction successfully submitted.
+                           TxHash                                 TxIx        Amount
+--------------------------------------------------------------------------------------
+bfb661a52c4ccca70722396de02b14746327312235ab3990bcccf62ea0496ee7     0        1000000000 lovelace + TxOutDatumNone
+
+Has the token arrived in the wallet above?
+1) yes
+2) no
+#? 2
+```
+
+```
+token has not arrived, querying the blockchain again...
+
+                           TxHash                                 TxIx        Amount
+--------------------------------------------------------------------------------------
+2bb7b1d677c9dc5345181a5cd3851802828f7b2e31301abd3b731fd14c2f4a56     0        998156686 lovelace + TxOutDatumNone
+2bb7b1d677c9dc5345181a5cd3851802828f7b2e31301abd3b731fd14c2f4a56     1        1500000 lovelace + 1 af5c529e0b6290c6960122efd5beec67ea0ebd075ccbb91c9d3d27aa.494f484b + TxOutDatumNone
+
+Has the token arrived in the wallet above?
+1) yes
+2) no
+#? 1
+```
+
+![Screenshot 2022-03-13 at 21-48-46 Address addr_test1vzs70ggma9r8mnts9hf2h7vy0wj5s7w8lr67tkhgwjmqy6qmlkeq3 - Cardanoscan](https://user-images.githubusercontent.com/59018247/158091239-62ba23a2-16c3-4350-b686-f1d2074a4182.png)
+
+![Screenshot 2022-03-13 at 21-49-03 Token IOHK - Cardanoscan](https://user-images.githubusercontent.com/59018247/158091274-5fe1a724-f615-47fb-b4b7-ede576a79bbf.png)
+
+![Screenshot 2022-03-13 at 21-49-53 Transaction 2bb7b1d677c9dc5345181a5cd3851802828f7b2e31301abd3b731fd14c2f4a56 - Cardanoscan](https://user-images.githubusercontent.com/59018247/158091282-cae27167-5979-4edf-99d9-7af8efb80ed4.png)
+
+
+
 
