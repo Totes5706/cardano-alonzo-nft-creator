@@ -10,7 +10,7 @@ This script creates the validation keys and addresses, and passes the parameters
 
 - [Cardano Alonzo NFT Creator](#cardano-alonzo-nft-creator)
   - [Overview](#overview)
-  - [Prerequisites Required](#prerequisites-required)
+  - [Pre-requisites Required](#pre-requisites-required)
     - [Nix Install on Linux](#nix-install-on-linux)
     - [Syncing the Cardano Node](#syncing-the-cardano-node)
   - [How to Use the NFT Maker](#how-to-use-the-nft-maker)
@@ -18,7 +18,7 @@ This script creates the validation keys and addresses, and passes the parameters
 
 
 
-## Prerequisites Required
+## Pre-requisites Required
 
 In order to run the bash script, two dependencies are needed:
 
