@@ -15,9 +15,6 @@
 #
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
 
-
-
-
 echo;
 echo ------------------------------------------------------
 echo Welcome to the Cardano Alonzo NFT Creator!
@@ -49,7 +46,9 @@ echo Which Cardano network will you be using?
 
 select magic in 'mainnet' 'testnet' 
 do
-    break
+     [[ -n $magic ]] && break || {
+        echo "invalid input"
+    }
 done
 
 case $magic in
@@ -109,7 +108,9 @@ then
 
     select overwrite in 'yes' 'no' 
     do
-        break
+        [[ -n $overwrite ]] && break || {
+        echo "invalid input"
+    }
     done
 
     case $overwrite in
@@ -143,7 +144,9 @@ then
 
     select overwrite in 'yes' 'no' 
     do
-        break
+        [[ -n $overwrite ]] && break || {
+        echo "invalid input"
+    }
     done
 
     case $overwrite in
@@ -206,7 +209,9 @@ do
 
     select isfunded in 'Query address again' 'Continue to mint' 
     do
-        break
+        [[ -n $isfunded ]] && break || {
+        echo "invalid input"
+    }
     done
 
     case $isfunded in
@@ -246,7 +251,9 @@ echo Would you like this NFT minted in this address, or have it transfered to an
 
 select sendto in 'Keep the NFT in this address' 'Transfer the NFT to a recipient address' 
 do
-    break
+     [[ -n $sendto ]] && break || {
+     echo "invalid input"
+    }
 done
 
 case $sendto in
@@ -273,7 +280,9 @@ case $sendto in
 
     select change in 'Keep remaining ADA in this address' 'Transfer remaining ADA to the recipient with the NFT' 
     do
-        break
+        [[ -n $change ]] && break || {
+        echo "invalid input"
+    }
     done
 
     case $change in
@@ -395,7 +404,9 @@ do
 
     select isquery in 'Query addresses again' 'Exit'
     do
-        break
+        [[ -n $isquery ]] && break || {
+        echo "invalid input"
+    }
     done
 
     case $isquery in
