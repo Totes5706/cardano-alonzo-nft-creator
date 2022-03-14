@@ -212,10 +212,6 @@ We are now ready to start using the NFT maker! To start the script, in this dire
 
 ## Sample Output
 
-First making sure the node is synced:
-
-![Screenshot from 2022-03-13 21-31-50](https://user-images.githubusercontent.com/59018247/158090008-4adf91cc-2711-4987-a49f-d314c39c0f81.png)
-
 
 - Directory: ```[nix-shell:~/cardano-alonzo-nft-creator]$```
 ```
@@ -223,8 +219,16 @@ First making sure the node is synced:
 ```
 
 ```
-Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): 
-/home/totinj/DriveTwo/cardano/cnode/sockets/node0.socket
+------------------------------------------------------
+Welcome to the Cardano Alonzo NFT Creator!
+------------------------------------------------------
+
+cardano-node socket location detected at: /home/totinj/DriveTwo/cardano/cnode/sockets/node0.socket
+
+Which Cardano network will you be using?
+1) mainnet
+2) testnet
+#? 2
 ```
 
 ```
@@ -253,7 +257,7 @@ Generating payment address into payment.addr
 ------------------------------------------------------
 You are currently set up on the --testnet-magic 1097911063
 
-payment address = addr_test1vzs70ggma9r8mnts9hf2h7vy0wj5s7w8lr67tkhgwjmqy6qmlkeq3
+payment address = addr_test1vpggyzeqrc5rmwa98lk728920xj79f4pshtvr9rc3pcwpwgchsae9
 
 Fund this address with ADA to get started.
 ------------------------------------------------------
@@ -261,25 +265,62 @@ Fund this address with ADA to get started.
 
 Once this address is funded, press enter to continue 
 ```
+Fund the address from either another wallet or the faucet (if you are on the testnet)
 
-![Screenshot 2022-03-13 at 21-40-09 Faucet](https://user-images.githubusercontent.com/59018247/158090547-c60c5add-da1d-4317-9e82-0aeab9b3eaaa.png)
+![Screenshot 2022-03-14 at 19-34-33 Faucet](https://user-images.githubusercontent.com/59018247/158277931-de09365b-c275-4be3-b484-8bd90ce2955c.png)
 
 
 ```
                            TxHash                                 TxIx        Amount
 --------------------------------------------------------------------------------------
-bfb661a52c4ccca70722396de02b14746327312235ab3990bcccf62ea0496ee7     0        1000000000 lovelace + TxOutDatumNone
 
-Has the ADA appeared in the address above, inside the utxo?
-1) yes
-2) no
+The following utxos have been found. Query the address again?
+1) Query address again
+2) Continue to mint
 #? 1
 ```
 
 ```
-Which utxo would you like to use?
-1) bfb661a52c4ccca70722396de02b14746327312235ab3990bcccf62ea0496ee7#0
+                           TxHash                                 TxIx        Amount
+--------------------------------------------------------------------------------------
+c333dd410bb7b7b4a124e6ee7383ca6df7fe0b76e275347c9180f0c1845bfd82     0        1000000000 lovelace + TxOutDatumNone
+
+The following utxos have been found. Query the address again?
+1) Query address again
+2) Continue to mint
+#? 2
+```
+
+
+```
+Which utxo would you like to use (enter number selection)?
+1) c333dd410bb7b7b4a124e6ee7383ca6df7fe0b76e275347c9180f0c1845bfd82#0
 #? 1
+```
+
+```
+Would you like this NFT minted in this address, or have it transfered to another address?
+1) Keep the NFT in this address
+2) Transfer the NFT to a recipient address
+#? 2
+```
+
+```
+Would you like this NFT minted in this address, or have it transfered to another address?
+1) Keep the NFT in this address
+2) Transfer the NFT to a recipient address
+#? 2
+```
+
+```
+Enter the recipient address you want to send to (no spaces or special characters allowed): addr_test1qp080kw89tmt5jmp3m54qnu5edxfjyh966ylezf0e2syzcw7h0jw8jsptmz6zgv45kzmhf9gn6l75t0xjkz6rlt69qzqffjzds
+```
+
+```
+Do you want the left over ADA (extra change) be sent to the recipient as well?
+1) Keep remaining ADA in this address
+2) Transfer remaining ADA to the recipient with the NFT
+#? 2
 ```
 
 ```
@@ -287,46 +328,59 @@ Generating protocol parameters into protocol.json
 
 Generating unit.json
 
-Generating NFT policy using the following parameters:
+Generating NFT policy
 
 Token Name : IOHK
+Token Name Hex : 494f484b
 Tokens Minted : 1
-UTXO : bfb661a52c4ccca70722396de02b14746327312235ab3990bcccf62ea0496ee7#0
-Address : addr_test1vzs70ggma9r8mnts9hf2h7vy0wj5s7w8lr67tkhgwjmqy6qmlkeq3
+UTXO : c333dd410bb7b7b4a124e6ee7383ca6df7fe0b76e275347c9180f0c1845bfd82#0
+Address : addr_test1vpggyzeqrc5rmwa98lk728920xj79f4pshtvr9rc3pcwpwgchsae9
+Recipient NFT Address: addr_test1qp080kw89tmt5jmp3m54qnu5edxfjyh966ylezf0e2syzcw7h0jw8jsptmz6zgv45kzmhf9gn6l75t0xjkz6rlt69qzqffjzds
+Policy Id : c972ebee7efd168b6bded450213b5eeb03021a96032eeee3f38e2890
+v : 1 c972ebee7efd168b6bded450213b5eeb03021a96032eeee3f38e2890.494f484b
 Policy File Directory : policy/token.plutus
 
-Estimated transaction fee: Lovelace 343314
+Estimated transaction fee: Lovelace 348460
 Transaction successfully submitted.
+
+Transaction has been submitted, press enter to query the local address 
+```
+
+```
+Transaction has been submitted, press enter to query the local address 
+
+Local Address: addr_test1vpggyzeqrc5rmwa98lk728920xj79f4pshtvr9rc3pcwpwgchsae9
+
                            TxHash                                 TxIx        Amount
 --------------------------------------------------------------------------------------
-bfb661a52c4ccca70722396de02b14746327312235ab3990bcccf62ea0496ee7     0        1000000000 lovelace + TxOutDatumNone
 
-Has the token arrived in the wallet above?
-1) yes
-2) no
+
+Recipient Address: addr_test1qp080kw89tmt5jmp3m54qnu5edxfjyh966ylezf0e2syzcw7h0jw8jsptmz6zgv45kzmhf9gn6l75t0xjkz6rlt69qzqffjzds
+
+                           TxHash                                 TxIx        Amount
+--------------------------------------------------------------------------------------
+2e19f0d1ad8558788c2d185471dfc92f58ff1a509335652962794a4216330381     0        19461943 lovelace + TxOutDatumNone
+2e19f0d1ad8558788c2d185471dfc92f58ff1a509335652962794a4216330381     1        1500000 lovelace + 1 49528ebbc1ede3e6fc7964ddbf15d04ecb15a0ae3380d26c0610c030.546f746573 + TxOutDatumNone
+5005285ce2203ec6bb23de21a939bd68b834de4d6d83de2366763aec52936eda     1        1500000 lovelace + 1 7980c42d109e7935606404c42360d083ff7fb958b01a3c65b6e9a585.546f746573 + TxOutDatumNone
+593e53fc8844a516d363bf796f487db87ac4ff1be39b549f3678c7503e6cd18c     1        1500000 lovelace + 1 2e925d78ea0e9184a4e52220bf954074740b322c305708764addb075.546f746573 + TxOutDatumNone
+81a3351aca425bd624cc2d82a8445b8ff94602c2991327d3322f53d08e9be788     1        1500000 lovelace + 1 1218d6282d0a1e1c71c2626aab0e871cd69ba6e30ed6a0421e895bd1.546f746573 + TxOutDatumNone
+bd1663c0a688eb724d24276b8a35b45de7934f4ad1bd71856f265e696ee6f8a6     1        1500000 lovelace + 1 27914667b0fe0749865663c4035afcf331aeeca1c454d349d1efe918.546f746573 + TxOutDatumNone
+bf5571cf9caddb3f9be3b4328f7f0815e86009d4c37c878630ded99e0556dbd8     0        998151540 lovelace + TxOutDatumNone
+bf5571cf9caddb3f9be3b4328f7f0815e86009d4c37c878630ded99e0556dbd8     1        1500000 lovelace + 1 c972ebee7efd168b6bded450213b5eeb03021a96032eeee3f38e2890.494f484b + TxOutDatumNone
+
+The following utxos have been found. What would you like to do?
+1) Query addresses again
+2) Exit
 #? 2
 ```
 
-```
-token has not arrived, querying the blockchain again...
+![Screenshot 2022-03-14 at 19-45-18 Address addr_test1qp080kw89tmt5jmp3m54qnu5edxfjyh966ylezf0e2syzcw7h0jw8jsptmz6zgv45kzmhf9gn6l75t0xjkz6rlt69qzqffjzds - Cardanoscan](https://user-images.githubusercontent.com/59018247/158278765-c33e2a94-4a39-4f94-a138-07178cbd84d0.png)
+ 
+ 
+ ![Screenshot 2022-03-14 at 19-45-55 Token IOHK - Cardanoscan](https://user-images.githubusercontent.com/59018247/158278819-fb32c8d3-1167-42f4-a47c-372887ffd548.png)
 
-                           TxHash                                 TxIx        Amount
---------------------------------------------------------------------------------------
-2bb7b1d677c9dc5345181a5cd3851802828f7b2e31301abd3b731fd14c2f4a56     0        998156686 lovelace + TxOutDatumNone
-2bb7b1d677c9dc5345181a5cd3851802828f7b2e31301abd3b731fd14c2f4a56     1        1500000 lovelace + 1 af5c529e0b6290c6960122efd5beec67ea0ebd075ccbb91c9d3d27aa.494f484b + TxOutDatumNone
 
-Has the token arrived in the wallet above?
-1) yes
-2) no
-#? 1
-```
-
-![Screenshot 2022-03-13 at 21-48-46 Address addr_test1vzs70ggma9r8mnts9hf2h7vy0wj5s7w8lr67tkhgwjmqy6qmlkeq3 - Cardanoscan](https://user-images.githubusercontent.com/59018247/158091239-62ba23a2-16c3-4350-b686-f1d2074a4182.png)
-
-![Screenshot 2022-03-13 at 21-49-03 Token IOHK - Cardanoscan](https://user-images.githubusercontent.com/59018247/158091274-5fe1a724-f615-47fb-b4b7-ede576a79bbf.png)
-
-![Screenshot 2022-03-13 at 21-49-53 Transaction 2bb7b1d677c9dc5345181a5cd3851802828f7b2e31301abd3b731fd14c2f4a56 - Cardanoscan](https://user-images.githubusercontent.com/59018247/158091282-cae27167-5979-4edf-99d9-7af8efb80ed4.png)
-
+![Screenshot 2022-03-14 at 19-46-44 Transaction bf5571cf9caddb3f9be3b4328f7f0815e86009d4c37c878630ded99e0556dbd8 - Cardanoscan](https://user-images.githubusercontent.com/59018247/158278884-ddf1067b-f821-40e8-9b67-1804c25ecb94.png)
 
 
 
