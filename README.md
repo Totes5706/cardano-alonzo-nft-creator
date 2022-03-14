@@ -13,7 +13,7 @@ This script creates the validation keys and addresses, and passes the parameters
   - [Pre-requisites Required](#pre-requisites-required)
     - [Nix Install on Linux](#nix-install-on-linux)
     - [Syncing the Cardano Node](#syncing-the-cardano-node)
-  - [How to Use the NFT Maker](#how-to-use-the-nft-maker)
+  - [How to Use the NFT Creator](#how-to-use-the-nft-creator)
   - [Sample Output](#sample-output)
 
 
@@ -128,7 +128,7 @@ Here, you can now sync either the mainnet or testnet using the scripts:
 
 
 
-## How to Use the NFT Maker
+## How to Use the NFT Creator
 
 First, make sure your cardano-node is running and fully synced.
 
