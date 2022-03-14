@@ -16,8 +16,6 @@
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
 
 
-
-
 echo;
 echo ------------------------------------------------------
 echo Welcome to the Cardano Alonzo NFT Creator!
