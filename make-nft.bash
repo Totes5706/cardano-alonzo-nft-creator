@@ -247,7 +247,7 @@ done
 echo;
 
 #ask the user where the token would be sent
-echo Would you like this NFT minted in this address, or have it transfered to another address?
+echo Do you want the NFT minted in this address, or have it transferred to another address?
 
 select sendto in 'Keep the NFT in this address' 'Transfer the NFT to a recipient address' 
 do
