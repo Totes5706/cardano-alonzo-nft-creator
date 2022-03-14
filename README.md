@@ -8,7 +8,6 @@ In this project, we will be using the bash script make-nft.bash. This script cre
 
 - [Cardano Alonzo NFT Creator](#cardano-alonzo-nft-creator)
   - [Overview](#overview)
-  - [Table of Contents](#table-of-contents)
   - [Prerequisites Required](#prerequisites-required)
   - [How to Use the NFT Maker](#how-to-use-the-nft-maker)
   - [Sample Output](#sample-output)
