@@ -235,7 +235,9 @@ echo;
 echo 'Which utxo would you like to use (enter number selection)?'
 select oref in "${array_txid[@]}"
  do
-    break
+    [[ -n $oref ]] && break || {
+        echo "invalid input"
+    }
 done
 echo;
 
