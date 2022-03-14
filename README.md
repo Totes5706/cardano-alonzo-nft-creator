@@ -346,12 +346,6 @@ Recipient Address: addr_test1qp080kw89tmt5jmp3m54qnu5edxfjyh966ylezf0e2syzcw7h0j
 
                            TxHash                                 TxIx        Amount
 --------------------------------------------------------------------------------------
-2e19f0d1ad8558788c2d185471dfc92f58ff1a509335652962794a4216330381     0        19461943 lovelace + TxOutDatumNone
-2e19f0d1ad8558788c2d185471dfc92f58ff1a509335652962794a4216330381     1        1500000 lovelace + 1 49528ebbc1ede3e6fc7964ddbf15d04ecb15a0ae3380d26c0610c030.546f746573 + TxOutDatumNone
-5005285ce2203ec6bb23de21a939bd68b834de4d6d83de2366763aec52936eda     1        1500000 lovelace + 1 7980c42d109e7935606404c42360d083ff7fb958b01a3c65b6e9a585.546f746573 + TxOutDatumNone
-593e53fc8844a516d363bf796f487db87ac4ff1be39b549f3678c7503e6cd18c     1        1500000 lovelace + 1 2e925d78ea0e9184a4e52220bf954074740b322c305708764addb075.546f746573 + TxOutDatumNone
-81a3351aca425bd624cc2d82a8445b8ff94602c2991327d3322f53d08e9be788     1        1500000 lovelace + 1 1218d6282d0a1e1c71c2626aab0e871cd69ba6e30ed6a0421e895bd1.546f746573 + TxOutDatumNone
-bd1663c0a688eb724d24276b8a35b45de7934f4ad1bd71856f265e696ee6f8a6     1        1500000 lovelace + 1 27914667b0fe0749865663c4035afcf331aeeca1c454d349d1efe918.546f746573 + TxOutDatumNone
 bf5571cf9caddb3f9be3b4328f7f0815e86009d4c37c878630ded99e0556dbd8     0        998151540 lovelace + TxOutDatumNone
 bf5571cf9caddb3f9be3b4328f7f0815e86009d4c37c878630ded99e0556dbd8     1        1500000 lovelace + 1 c972ebee7efd168b6bded450213b5eeb03021a96032eeee3f38e2890.494f484b + TxOutDatumNone
 
