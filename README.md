@@ -94,7 +94,7 @@ Head to the plutus-apps directory and update it to the current git tag:
 totinj@penguin:~/plutus-apps$ git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244
 ```
 
-You should now be onm the proper branch and can run nix-shell in this directory. Run nix-shell:
+You should now be on the proper git branch and can run nix-shell in this directory. Run nix-shell:
 
 ```
 totinj@penguin:~/plutus-apps$ nix-shell
@@ -127,7 +127,7 @@ Head to the plutus-apps directory and update it to the current git tag:
 totinj@penguin:~/plutus-apps$ git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244
 ```
 
-You should now be onm the proper branch and can run nix-shell in this directory. Run nix-shell:
+You should now be on the proper git branch and can run nix-shell in this directory. Run nix-shell:
 
 ```
 totinj@penguin:~/plutus-apps$ nix-shell
