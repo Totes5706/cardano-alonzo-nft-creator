@@ -173,7 +173,7 @@ You should now be on the proper git branch and can run nix-shell in this directo
 nix-shell
 ```
 
-Now, while in nix-shell, head over to this this repo to build the project:
+Now, while in nix-shell, head over to this repo to build the project:
 
 - Directory: ```[nix-shell:~/cardano-alonzo-nft-creator]$```
 ```
