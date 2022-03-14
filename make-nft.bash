@@ -18,6 +18,11 @@
 
 
 echo;
+echo ------------------------------------------------------
+echo Welcome to the Cardano Alonzo NFT Creator!
+echo ------------------------------------------------------
+echo;
+
 #get location of the cardano node from the user if it is undefined. Also check if they entered the correct directory.
 if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
 then
