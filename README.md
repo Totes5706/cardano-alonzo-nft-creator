@@ -88,6 +88,83 @@ Next, let’s clone this repo:
 totinj@penguin:~$ git clone https://github.com/Totes5706/cardano-alonzo-nft-creator.git
 ```
 
+Head to the plutus-apps directory and update it to the current git tag:
+
+```
+totinj@penguin:~/plutus-apps$ git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244
+```
+
+You should now be onm the proper branch and can run nix-shell in this directory. Run nix-shell:
+
+```
+totinj@penguin:~/plutus-apps$ nix-shell
+```
+
+This is run for the first time, it will take some time to build (30min + for a non-workstation computer).
+
+
 ## How to Use the NFT Maker
 
+
+In order to run the NFT script, first ensure you have plutus-apps repo from IOHK cloned and also this repo.
+
+
+If you do not, clone plutus-apps repo from IOHK by the following:
+
+```
+totinj@penguin:~$ git clone https://github.com/input-output-hk/plutus-apps.git
+```
+
+Clone this repo by:
+
+```
+totinj@penguin:~$ git clone https://github.com/Totes5706/cardano-alonzo-nft-creator.git
+```
+
+Head to the plutus-apps directory and update it to the current git tag:
+
+```
+totinj@penguin:~/plutus-apps$ git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244
+```
+
+You should now be onm the proper branch and can run nix-shell in this directory. Run nix-shell:
+
+```
+totinj@penguin:~/plutus-apps$ nix-shell
+```
+
+Now, while in nix-shell, head over to this this repo to build the project:
+
+```
+[nix-shell:~/cardano-alonzo-nft-creator]$ cabal update
+```
+
+```
+[nix-shell:~/cardano-alonzo-nft-creator]$ cabal build
+```
+
+If successful, you should see the output:
+
+```
+Build profile: -w ghc-8.10.4.20210212 -O1
+In order, the following will be built (use -v for more details):
+ - cardano-alonzo-nft-creator-0.1.0.0 (lib) (file src/Utils.hs changed)
+ - cardano-alonzo-nft-creator-0.1.0.0 (exe:token-policy) (dependency rebuilt)
+ - cardano-alonzo-nft-creator-0.1.0.0 (exe:token-name) (dependency rebuilt)
+Preprocessing library for cardano-alonzo-nft-creator-0.1.0.0..
+Building library for cardano-alonzo-nft-creator-0.1.0.0..
+[2 of 2] Compiling Utils            ( src/Utils.hs, /home/totinj/DriveTwo/cardano/git/cardano-alonzo-nft-creator/dist-newstyle/build/x86_64-linux/ghc-8.10.4.20210212/cardano-alonzo-nft-creator-0.1.0.0/build/Utils.o, /home/totinj/DriveTwo/cardano/git/cardano-alonzo-nft-creator/dist-newstyle/build/x86_64-linux/ghc-8.10.4.20210212/cardano-alonzo-nft-creator-0.1.0.0/build/Utils.dyn_o )
+Preprocessing executable 'token-policy' for cardano-alonzo-nft-creator-0.1.0.0..
+Building executable 'token-policy' for cardano-alonzo-nft-creator-0.1.0.0..
+Preprocessing executable 'token-name' for cardano-alonzo-nft-creator-0.1.0.0..
+Building executable 'token-name' for cardano-alonzo-nft-creator-0.1.0.0..
+```
+We are now ready to start using the NFT maker! To start the script, in this directory run:
+
+```
+[nix-shell:~/cardano-alonzo-nft-creator]$ ./make-nft.bash
+```
+
 ## Sample Output
+
+
