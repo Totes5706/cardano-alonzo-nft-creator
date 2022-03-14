@@ -18,12 +18,19 @@
 
 
 echo;
-#get location of the cardano node from the user if it is undefined
+#get location of the cardano node from the user if it is undefined. Also check if they entered the correct directory.
 if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
 then
-    read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
-    #save nodepath as environment variable, so user can re-mint without having to reinput directory
-    export CARDANO_NODE_SOCKET_PATH=$nodepath
+    while true ; do
+        read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
+        if [ -e "${nodepath}" ]; then
+            export CARDANO_NODE_SOCKET_PATH=$nodepath
+            echo cardano-node socket location found at: $CARDANO_NODE_SOCKET_PATH
+            break
+        else
+            echo "Location of node socket not found, please re-enter"
+        fi
+    done
 else
     echo cardano-node socket location detected at: $CARDANO_NODE_SOCKET_PATH
 fi
