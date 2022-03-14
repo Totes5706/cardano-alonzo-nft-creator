@@ -16,12 +16,12 @@
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
 
 
-
 echo;
 echo ------------------------------------------------------
 echo Welcome to the Cardano Alonzo NFT Creator!
 echo ------------------------------------------------------
 echo;
+
 
 #get location of the cardano node from the user if it is undefined. Also check if they entered the correct directory.
 if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
@@ -29,8 +29,9 @@ then
     while true ; do
         read -p 'Enter the location of the cardano node socket (ex: /opt/cardano/cnode/sockets/node0.socket): ' nodepath
         if [ -e "${nodepath}" ]; then
+            echo;
+            echo cardano-node socket location found at: $nodepath
             export CARDANO_NODE_SOCKET_PATH=$nodepath
-            echo cardano-node socket location found at: $CARDANO_NODE_SOCKET_PATH
             break
         else
             echo "Location of node socket not found, please re-enter"
@@ -182,7 +183,7 @@ echo ------------------------------------------------------
 echo ;echo;
 
 read -p "Once this address is funded, press enter to continue "
-
+echo;
 #query the CLI at the address until we see the funds have arrived
 addressfunded=false
 while [ $addressfunded = false ]
@@ -190,8 +191,16 @@ do
     cardano-cli query utxo \
         --address $address \
         $magic
+    
+    cardano-cli query utxo \
+        --address $address \
+        $magic \
+        --out-file utxoquery.txt
+
+    array_txid=($(awk -F'"' '/#/{print $2}' utxoquery.txt))
+    
     echo;
-    echo Has the ADA appeared in the address above, inside the utxo?
+    echo The following utxos have been found. Query the address again?
 
     select isfunded in 'yes' 'no' 
     do
@@ -201,28 +210,24 @@ do
     case $isfunded in
 
     yes)
-        addressfunded=true
-
-        ;;
-    
-    no)
         echo;
         echo Address not funded yet, querying the blockchain again...
         echo;
+        ;;
+    
+    no)
+        if [ -n "$array_txid" ] 
+        then
+            addressfunded=true
+        else 
+            echo;
+            echo Error! No utxos have been found at the address! Please fund the address and try again.
+        fi
         ;;
     esac
     
 done
 echo;
-
-#store utxo information to file
-cardano-cli query utxo \
-        --address $address \
-        $magic \
-        --out-file utxoquery.txt
-
-#store the query utxo in an array, so we can prompt the user to select the proper utxo
-array_txid=($(awk -F'"' '/#/{print $2}' utxoquery.txt))
 
 #Specify from the user which utxo to use for minting
 echo Which utxo would you like to use?
@@ -249,17 +254,9 @@ echo;
 mkdir -p policy
 
 #create new policy file in the new directory policy
-echo Generating NFT policy using the following parameters:
+echo Generating NFT policy 
 echo;
-
 policyFile=policy/token.plutus
-
-echo Token Name : $tn
-echo Tokens Minted : $amt
-echo UTXO : $oref
-echo Address : $address
-echo Policy File Directory : $policyFile 
-echo;
 
 #Send these four parameters to the on-chain code of Token.Onchain.hs to validate, then create the policy for the NFT
 cabal exec token-policy $policyFile $oref $tn
@@ -276,6 +273,17 @@ tnHex=$(cabal exec token-name -- $tn)
 
 #compute the unique minted value based off the amount, policyid, and token name
 v="$amt $pid.$tnHex"
+
+echo Token Name : $tn
+echo Token Name Hex : $tnHex
+echo Tokens Minted : $amt
+echo UTXO : $oref
+echo Address : $address
+echo Policy Id : $pid
+echo v : $v
+echo Policy File Directory : $policyFile 
+export CARDANO_NODE_SOCKET_PATH="$nodepath"
+echo;
 
 #build the transaction using the parameters from above
 cardano-cli transaction build \
@@ -302,6 +310,9 @@ cardano-cli transaction submit \
     $magic \
     --tx-file $signedFile
 
+echo;
+
+read -p "Transaction has been submitted, press enter to query the address for the new token "
 #check to see if the token arrived before the script closes
 tokenfunded=false
 while [ $tokenfunded = false ]
@@ -310,7 +321,7 @@ do
         --address $address \
         $magic
     echo;
-    echo Has the token arrived in the wallet above?
+    echo The following utxos have been found. Query the address again?
 
     select istoken in 'yes' 'no' 
     do
@@ -320,14 +331,13 @@ do
     case $istoken in
 
     yes)
-        tokenfunded=true
-        
+        echo;
+        echo Querying the blockchain again...
+        echo;
         ;;
     
     no)
-        echo;
-        echo token has not arrived, querying the blockchain again...
-        echo;
+        tokenfunded=true
         ;;
     esac
     
