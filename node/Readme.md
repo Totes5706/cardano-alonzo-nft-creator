@@ -5,12 +5,14 @@ You must either be in nix-shell, or have the necessary dependencies to run carda
 
 ## Testnet Sync Start
 
+- Directory: ```[nix-shell:~/cardano-alonzo-nft-creator/node]$```
 ```
-totinj@penguin:~$ ./start-testnet-node
+./start-testnet-node
 ```
 
 ## Mainnet Sync Start
 
+- Directory: ```[nix-shell:~/cardano-alonzo-nft-creator/node]$```
 ```
-totinj@penguin:~$ ./start-mainet-node
+./start-mainet-node
 ```
