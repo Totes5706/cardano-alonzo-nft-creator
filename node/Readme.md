@@ -14,5 +14,5 @@ You must either be in nix-shell, or have the necessary dependencies to run carda
 
 - Directory: ```[nix-shell:~/cardano-alonzo-nft-creator/node]$```
 ```
-./start-mainet-node
+./start-mainnet-node
 ```
