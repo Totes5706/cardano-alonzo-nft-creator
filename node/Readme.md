@@ -7,12 +7,12 @@ You must either be in nix-shell, or have the necessary dependencies to run carda
 
 - Directory: ```[nix-shell:~/cardano-alonzo-nft-creator/node]$```
 ```
-./start-testnet-node
+./start-testnet-node.sh
 ```
 
 ## Mainnet Sync Start
 
 - Directory: ```[nix-shell:~/cardano-alonzo-nft-creator/node]$```
 ```
-./start-mainnet-node
+./start-mainnet-node.sh
 ```
