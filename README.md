@@ -336,7 +336,6 @@ Transaction has been submitted, press enter to query the local address
 ```
 
 ```
-Transaction has been submitted, press enter to query the local address 
 
 Local Address: addr_test1vpggyzeqrc5rmwa98lk728920xj79f4pshtvr9rc3pcwpwgchsae9
 
