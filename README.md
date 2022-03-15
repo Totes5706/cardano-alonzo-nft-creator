@@ -234,6 +234,22 @@ Which Cardano network will you be using?
 ```
 
 ```
+Do you want to add additional metadata to this NFT (ex Description, IPFS link)?
+1) Skip additional metadata
+2) Add more metadata
+#? 2
+```
+
+```
+Enter the description of your NFT (ex This is my first NFT thanks to the Cardano foundation): 
+Special IOHK token for unique goal
+```
+```
+Enter the IPFS hash from ipfs.io for the NFT (ex QmRhTTbUrPYEw3mJGGhQqQST9k86v1DPBiTTWJGKDJsVFw): 
+QmRhTTbUrPYEw3mJGGhQqQST45Sd2dSAS   
+
+```
+```
 You chose: --testnet-magic 1097911063
 
 Enter of the NFT name you want to create (no spaces or special characters allowed) : IOHK
@@ -321,6 +337,8 @@ Generating NFT policy
 
 Token Name : IOHK
 Token Name Hex : 494f484b
+Token Name Description : Special IOHK token for unique goal
+Image IPFS Hash : QmRhTTbUrPYEw3mJGGhQqQST45Sd2dSAS
 Tokens Minted : 1
 UTXO : c333dd410bb7b7b4a124e6ee7383ca6df7fe0b76e275347c9180f0c1845bfd82#0
 Address : addr_test1vpggyzeqrc5rmwa98lk728920xj79f4pshtvr9rc3pcwpwgchsae9
