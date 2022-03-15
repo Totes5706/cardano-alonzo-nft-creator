@@ -21,6 +21,7 @@ echo Welcome to the Cardano Alonzo NFT Creator!
 echo ------------------------------------------------------
 echo;
 
+
 #get location of the cardano node from the user if it is undefined. Also check if they entered the correct directory.
 if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
 then
@@ -61,11 +62,13 @@ case $magic in
         ;;
 esac
 echo You chose: $magic;
+
 echo;
 
 #get the NFT name from the user
-read -p 'Enter of the NFT name you want to create (no spaces or special characters allowed) : ' tn
+read -p 'Enter of the NFT name you want to create: ' tn
 echo;
+
 
 #check for spaces and special characters
 re="[[:space:]]+"
@@ -79,6 +82,7 @@ done
 amt=1
 echo The number of tokens that will be minted is: $amt
 echo;
+
 
 #create NFT file directory and change to that directory
 mkdir -p NFT
@@ -170,6 +174,67 @@ else
 fi
 echo;
 
+#ask the user if they want to add metadata to the transaction
+echo 'Do you want to add additional metadata to this NFT (ex Description, IPFS link)?'
+
+select addmeta in 'Skip additional metadata' 'Add more metadata' 
+do
+     [[ -n $addmeta ]] && break || {
+     echo "invalid input"
+    }
+done
+
+case $addmeta in
+
+'Skip additional metadata')
+    nftdescription=''
+    ipfs_hash=''
+    ;;
+    
+'Add more metadata')
+    echo;
+    #ask the user for the NFT description
+    read -p 'Enter the description of your NFT (ex This is my first NFT thanks to the Cardano foundation): ' nftdescription
+    charlength=false
+    charspecial=false
+    #check for proper length and no special characters
+    while [ $charlength = false ] && [ $charspecial = false ]
+    do
+        echo;
+        if [ ${#nftdescription} -gt 64 ]
+        then
+            read -p 'Description is too long, max characters allowed is 64. Please enter a shorter description: ' nftdescription
+        elif [[ $nftdescription = *[-@#$%'&'*=+]* ]]
+        then
+            read -p 'Description name not allowed, please enter again (no special characters): ' nftdescription
+        else
+            charlength=true
+            charspecial=true
+        fi
+    done
+
+    #ask the user for the NFT description
+    read -p 'Enter the IPFS hash from ipfs.io for the NFT (ex QmRhTTbUrPYEw3mJGGhQqQST9k86v1DPBiTTWJGKDJsVFw) ' ipfs_hash
+    charlength=false
+    charspecial=false
+    #check for proper length and no special characters
+    while [ $charlength = false ] && [ $charspecial = false ]
+    do
+        echo;
+        if [ ${#ipfs_hash} -gt 64 ]
+        then
+            read -p 'IPFS hash is too long, max characters allowed is 64. Please enter a shorter hash: ' ipfs_hash
+        elif [[ $ipfs_hash = *[-@#$%'&'*=+]* ]]
+        then
+            read -p 'Hash name not allowed, please enter again (no special characters): ' ipfs_hash
+        else
+            charlength=true
+            charspecial=true
+        fi
+    done
+    ;;
+esac
+
 #declare variable address to be the receive address of the new key pair
 address=$(cat payment.addr)
 
@@ -244,7 +309,7 @@ done
 echo;
 
 #ask the user where the token would be sent
-echo Do you want the NFT minted in this address, or have it transferred to another address?
+echo Do you want the NFT minted in this address, or have it transfered to another address?
 
 select sendto in 'Keep the NFT in this address' 'Transfer the NFT to a recipient address' 
 do
@@ -294,6 +359,8 @@ case $sendto in
     esac
     ;;
 esac
+    
+
 echo;
 
 #query the protocol parameters and save them into the file protocol.json
@@ -309,13 +376,15 @@ echo Generating unit.json
 echo "{\"fields\":[],\"constructor\":0}" > unit.json 
 echo;
 
-#create new policy file in the new directory policy
+#create policy file to store policy files
 mkdir -p policy
+
+#create new policy file in the new directory policy
 echo Generating NFT policy 
 echo;
 policyFile=policy/token.plutus
 
-#Send these three parameters to the on-chain code of Token.Onchain.hs to validate, then create the policy for the NFT
+#Send these four parameters to the on-chain code of Token.Onchain.hs to validate, then create the policy for the NFT
 cabal exec token-policy $policyFile $oref $tn
 
 #create a signed and unsigned file to prepare for the Cardano-CLI transaction build/sign
@@ -331,8 +400,26 @@ tnHex=$(cabal exec token-name -- $tn)
 #compute the unique minted value based off the amount, policyid, and token name
 v="$amt $pid.$tnHex"
 
+#generate metadata for NFT
+cat > metadata.json << EOF
+{ 
+  "721": {
+    "$pid": { 
+      "$tnHex": {
+        "name": "$tn",
+        "id": "1",
+        "image":[ "https://ipfs.io/ipfs/", "$ipfs_hash" ],
+        "description": "$nftdescription"
+      }  
+    }
+  }
+}
+EOF
+
 echo Token Name : $tn
 echo Token Name Hex : $tnHex
+echo Token Name Description : $nftdescription
+echo Image IPFS Hash : $ipfs_hash
 echo Tokens Minted : $amt
 echo UTXO : $oref
 echo Address : $address
@@ -353,13 +440,14 @@ cardano-cli transaction build \
     --mint-redeemer-file unit.json \
     --change-address $changeaddress \
     --protocol-params-file protocol.json \
+    --metadata-json-file metadata.json  \
     --out-file $unsignedFile \
 
 #sign the transaction using the parameters from above
 cardano-cli transaction sign \
+    $magic \
     --tx-body-file $unsignedFile \
     --signing-key-file payment.skey \
-    $magic \
     --out-file $signedFile
 
 #submit the transaction
