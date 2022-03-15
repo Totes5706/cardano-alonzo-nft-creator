@@ -132,7 +132,7 @@ Here, you can now sync either the mainnet or testnet using the scripts:
 
 First, make sure your cardano-node is running and fully synced. 
 Also, make note of the location node.socket file for your node; you will need the directory location of it when you start the script.
-Alternatively, in the [env.sh](https://github.com/Totes5706/cardano-alonzo-nft-creator/blob/main/env.sh) you can instead include the path there and then run . ```env.sh``` to declare it as an environment variable.
+Alternatively, in the [env.sh](https://github.com/Totes5706/cardano-alonzo-nft-creator/blob/main/env.sh) you can instead include the path there and then run ```. env.sh``` to declare it as an environment variable.
 
 Second, ensure you have plutus-apps repo from IOHK cloned and also this repo.
 If you do not, clone plutus-apps repo from IOHK by the following:
