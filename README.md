@@ -294,7 +294,7 @@ Which utxo would you like to use (enter number selection)?
 ```
 
 ```
-Do you want the NFT minted in this address, or have it transfered to another address?
+Do you want the NFT minted in this address, or have it transferred to another address?
 1) Keep the NFT in this address
 2) Transfer the NFT to a recipient address
 #? 2
