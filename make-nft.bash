@@ -21,7 +21,6 @@ echo Welcome to the Cardano Alonzo NFT Creator!
 echo ------------------------------------------------------
 echo;
 
-
 #get location of the cardano node from the user if it is undefined. Also check if they entered the correct directory.
 if [ -z "$CARDANO_NODE_SOCKET_PATH" ]
 then
@@ -62,13 +61,11 @@ case $magic in
         ;;
 esac
 echo You chose: $magic;
-
 echo;
 
 #get the NFT name from the user
 read -p 'Enter of the NFT name you want to create (no spaces or special characters allowed) : ' tn
 echo;
-
 
 #check for spaces and special characters
 re="[[:space:]]+"
@@ -297,8 +294,6 @@ case $sendto in
     esac
     ;;
 esac
-    
-
 echo;
 
 #query the protocol parameters and save them into the file protocol.json
@@ -314,15 +309,13 @@ echo Generating unit.json
 echo "{\"fields\":[],\"constructor\":0}" > unit.json 
 echo;
 
-#create policy file to store policy files
-mkdir -p policy
-
 #create new policy file in the new directory policy
+mkdir -p policy
 echo Generating NFT policy 
 echo;
 policyFile=policy/token.plutus
 
-#Send these four parameters to the on-chain code of Token.Onchain.hs to validate, then create the policy for the NFT
+#Send these three parameters to the on-chain code of Token.Onchain.hs to validate, then create the policy for the NFT
 cabal exec token-policy $policyFile $oref $tn
 
 #create a signed and unsigned file to prepare for the Cardano-CLI transaction build/sign
