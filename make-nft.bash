@@ -213,20 +213,20 @@ case $addmeta in
         fi
     done
 
-    #ask the user for the NFT description
-    read -p 'Enter the IPFS hash from ipfs.io for the NFT (ex QmRhTTbUrPYEw3mJGGhQqQST9k86v1DPBiTTWJGKDJsVFw) ' ipfs_hash
+    #ask the user for the IPFS description
+    read -p 'Enter the IPFS hash from ipfs.io for the NFT (ex QmRhTTbUrPYEw3mJGGhQqQST9k86v1DPBiTTWJGKDJsVFw): ' ipfs_hash
     charlength=false
     charspecial=false
-    #check for proper length and no special characters
+    #check for proper length and no special characters/spaces
     while [ $charlength = false ] && [ $charspecial = false ]
     do
         echo;
         if [ ${#ipfs_hash} -gt 64 ]
         then
             read -p 'IPFS hash is too long, max characters allowed is 64. Please enter a shorter hash: ' ipfs_hash
-        elif [[ $ipfs_hash = *[-@#$%'&'*=+]* ]]
+        elif [[ $ipfs_hash = *[-@#$%'&'*=+]* ]] || [[ $ipfs_hash =~ $re ]]
         then
-            read -p 'Hash name not allowed, please enter again (no special characters): ' ipfs_hash
+            read -p 'Hash name not allowed, please enter again (no special characters or spaces): ' ipfs_hash
         else
             charlength=true
             charspecial=true
@@ -327,14 +327,13 @@ case $sendto in
     
 'Transfer the NFT to a recipient address')
     echo;
-    read -p 'Enter the recipient address you want to send to (no spaces or special characters allowed): ' sendaddress
+    read -p 'Enter the recipient address you want to send to: ' sendaddress
     echo;
 
     #check for spaces and special characters
-    re="[[:space:]]+"
     while [[ $sendaddress = *[-@#$%'&'*=+]* ]] || [[ $sendaddress =~ $re ]]
     do
-        read -p 'Address name not allowed, please enter again (no spaces or special characters allowed) : ' sendaddress
+        read -p 'Address name not allowed, please enter again (no spaces or special characters allowed): ' sendaddress
     done
 
     #ask the user if the remaining ADA be sent to the recipient
@@ -401,6 +400,8 @@ tnHex=$(cabal exec token-name -- $tn)
 v="$amt $pid.$tnHex"
 
 #generate metadata for NFT
+echo Generating metadata.json
+echo;
 cat > metadata.json << EOF
 { 
   "721": {
