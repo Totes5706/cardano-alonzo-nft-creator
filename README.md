@@ -91,15 +91,7 @@ Next, let’s clone this repo:
 git clone https://github.com/Totes5706/cardano-alonzo-nft-creator.git
 ```
 
-Head to the plutus-apps directory and update it to the current git tag:
-
-- Directory: ```totinj@penguin:~/plutus-apps$```
-```
-git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244
-```
-
-You should now be on the proper git branch and can run nix-shell in this directory. Run nix-shell:
-
+Head to the plutus-apps directory, and you can now run nix-shell. Run nix-shell:
 
 - Directory: ```totinj@penguin:~/plutus-apps$```
 ``` 
@@ -149,26 +141,7 @@ Clone this repo by:
 git clone https://github.com/Totes5706/cardano-alonzo-nft-creator.git
 ```
 
-Head to the plutus-apps directory and update it to the current git tag:
-
-- Directory: ```totinj@penguin:~/plutus-apps$```
-```  
-git checkout main
-```
-
-
-- Directory: ```totinj@penguin:~/plutus-apps$```
-```     
-git pull
-```
-
-- Directory: ```totinj@penguin:~/plutus-apps$```
-```
-git checkout 6e3f6a59d64f6d4cd9d38bf263972adaf4f7b244
-```
-
-You should now be on the proper git branch and can run nix-shell in this directory. Run nix-shell:
-
+Head to the plutus-apps directory. You can now run nix-shell in this directory. Run nix-shell:
 
 - Directory: ```totinj@penguin:~/plutus-apps$```
 ```
