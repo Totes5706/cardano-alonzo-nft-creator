@@ -77,7 +77,6 @@ This part should now be completed.
 
 By default, nix-shell includes the cardano-node and the cardano-cli. Therefore, we need to run nix-shell then sync the node.
 
-## Guide
 
 First, let’s clone plutus-apps repo from IOHK if you do not already have it:
 
