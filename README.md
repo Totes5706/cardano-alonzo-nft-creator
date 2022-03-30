@@ -22,7 +22,8 @@ This script creates the validation keys and addresses, and passes the parameters
 
 In order to run the bash script, two dependencies are needed:
 
-- nix needs to be installed in order to use the proper git commit for nix-shell. This can be run without nix, however it is highly recommended and the easier path to setup.
+- nix needs to be installed in order run nix-shell in the main git repo. Running nix-shell in this repo now includes cardano-node and cardano-cli, so they are not needed for installation.
+
 - the cardano node must be fully synced
 
 If you are in the Plutus Pioneer Program, these should already be installed. If not, follow along the next two subsections for the how to installation.
@@ -75,17 +76,10 @@ This part should now be completed.
 
 ### Syncing the Cardano Node
 
-By default, nix-shell includes the cardano-node and the cardano-cli. Therefore, we need to run nix-shell then sync the node.
+By default, nix-shell includes the cardano-node and the cardano-cli. Therefore, we need to run nix-shell then sync the node. If you currently do not have a node running, follow along to get the helper scripts to sync the cardano node:
 
 
-First, let’s clone plutus-apps repo from IOHK if you do not already have it:
-
-- Directory: ```totinj@penguin:~$```
-```
-git clone https://github.com/input-output-hk/plutus-apps.git
-```
-
-Next, let’s clone this cnode repo that already contains the sync scripts and config files:
+First, let’s clone this cnode repo that already contains the sync scripts and config files:
 
 - Directory: ```totinj@penguin:~$```
 ```
@@ -99,9 +93,16 @@ chmod +x start-mainnet-node.sh start-testnet-node.sh
 sudo ./update-config.sh
 ```
 
-Head to the plutus-apps directory, and you can now run nix-shell. Run nix-shell:
+Next, let's clone this repo:
 
-- Directory: ```totinj@penguin:~/plutus-apps$```
+- Directory: ```totinj@penguin:~$```
+```
+git clone https://github.com/Totes5706/cardano-alonzo-nft-creator.git
+```
+
+Head to the cardano-alonzo-nft-creator main directory, and you can now run nix-shell. Run nix-shell:
+
+- Directory: ```totinj@penguin:~/cardano-alonzo-nft-creator$```
 ``` 
 nix-shell
 ```
@@ -109,7 +110,7 @@ nix-shell
 If this is run for the first time, it will take some time to build (30min + for a non-workstation computer).
 
 
-While in nix-shell, head to the node directory inside this repo that we just cloned:
+While in nix-shell, head to the node directory inside the cnode repo that we just cloned earlier:
 
 - Directory: ```[nix-shell:~/cnode]$```
 
@@ -141,13 +142,7 @@ First, make sure your cardano-node is running and fully synced.
 Also, make note of the location node.socket file for your node; you will need the directory location of it when you start the script.
 Alternatively, in the [env.sh](https://github.com/Totes5706/cardano-alonzo-nft-creator/blob/main/env.sh) you can instead include the path there and then run ```. env.sh``` to declare it as an environment variable.
 
-Second, ensure you have plutus-apps repo from IOHK cloned and also this repo.
-If you do not, clone plutus-apps repo from IOHK by the following:
-
-- Directory: ```totinj@penguin:~$```
-```
-git clone https://github.com/input-output-hk/plutus-apps.git
-```
+Second, make sure you have already cloned this repo.
 
 Clone this repo by:
 
@@ -156,14 +151,14 @@ Clone this repo by:
 git clone https://github.com/Totes5706/cardano-alonzo-nft-creator.git
 ```
 
-Head to the plutus-apps directory. You can now run nix-shell in this directory. Run nix-shell:
+Head to the cardano-alonzo-nft-creator main directory, and you can now run nix-shell. Run nix-shell:
 
-- Directory: ```totinj@penguin:~/plutus-apps$```
-```
+- Directory: ```totinj@penguin:~/cardano-alonzo-nft-creator$```
+``` 
 nix-shell
 ```
 
-Now, while in nix-shell, head over to this repo to build the project:
+Now, while in nix-shell, update cabal and build the project:
 
 - Directory: ```[nix-shell:~/cardano-alonzo-nft-creator]$```
 ```
@@ -192,6 +187,14 @@ Building executable 'token-policy' for cardano-alonzo-nft-creator-0.1.0.0..
 Preprocessing executable 'token-name' for cardano-alonzo-nft-creator-0.1.0.0..
 Building executable 'token-name' for cardano-alonzo-nft-creator-0.1.0.0..
 ```
+
+Make sure we have executable permissions for the bash script:
+
+- Directory: ```[nix-shell:~/cardano-alonzo-nft-creator]$```
+```
+chmod +x make-nft.bash
+```
+
 We are now ready to start using the NFT maker! To start the script, in this directory run:
 
 
@@ -199,6 +202,7 @@ We are now ready to start using the NFT maker! To start the script, in this dire
 ```
 ./make-nft.bash
 ```
+
 
 ## Sample Output
 

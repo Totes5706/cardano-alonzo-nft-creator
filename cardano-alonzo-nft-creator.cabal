@@ -1,20 +1,49 @@
-Cabal-Version:      2.4
-Name:               cardano-alonzo-nft-creator
-Version:            0.1.0.0
-Author:              Lars Bruenjes, Joe Totes
-Maintainer:         
-Build-Type:          Simple
-Copyright:           © 2021 Lars Bruenjes
-License:             Apache-2.0
-License-files:       LICENSE
+cabal-version:      2.4
+name:               cardano-alonzo-nft-creator
+version:            0.1.0.0
 
+-- A short (one-line) description of the package.
+-- synopsis:
+
+-- A longer description of the package.
+-- description:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+license: Apache-2.0
+license-files: LICENSE
+author:             Joe Totes
+maintainer:         totinj@gmail.com
+
+-- A copyright notice.
+-- copyright:
+-- category:
+-- extra-source-files: CHANGELOG.md
+
+flag defer-plugin-errors
+    description:
+        Defer errors from the plugin, useful for things like Haddock that can't handle it.
+    default: False
+    manual: True
+
+common lang
+    default-language:   Haskell2010
+    ghc-options:
+      -Wall -Wnoncanonical-monad-instances
+      -Wincomplete-uni-patterns -Wincomplete-record-updates
+      -Wredundant-constraints -Widentities -rtsopts
+      -- See Plutus Tx readme
+      -fobject-code -fno-ignore-interface-pragmas -fno-omit-interface-pragmas
+    if flag(defer-plugin-errors)
+        ghc-options: -fplugin-opt PlutusTx.Plugin:defer-errors
 library
+  import: lang
   hs-source-dirs:      src
   exposed-modules:     Token.OnChain
-                       Utils
-                       
-  build-depends:       aeson
-                     , base ^>=4.14.1.0
+                       Utils                   
+  build-depends:       base >= 4.9 && < 5
+                     , aeson
                      , bytestring
                      , cardano-api
                      , containers
@@ -25,27 +54,24 @@ library
                      , plutus-contract
                      , plutus-ledger
                      , plutus-ledger-api
-                     , plutus-ledger-constraints
                      , plutus-tx-plugin
                      , plutus-tx
                      , plutus-use-cases
                      , serialise
                      , text
-  default-language:    Haskell2010
-  ghc-options:         -Wall -fobject-code -fno-ignore-interface-pragmas -fno-omit-interface-pragmas -fno-strictness -fno-spec-constr -fno-specialise
-
-
 
 executable token-policy
+  import: lang
   main-is: token-policy.hs
   hs-source-dirs:      app
-  ghc-options:         -Wall
-  build-depends:       base ^>= 4.14.1.0
+  ghc-options:         -threaded
+  build-depends:       base >= 4.9 && < 5
                      , cardano-alonzo-nft-creator
 
 executable token-name
+  import: lang
   main-is: token-name.hs
   hs-source-dirs:      app
-  ghc-options:         -Wall
-  build-depends:       base ^>= 4.14.1.0
-                     , cardano-alonzo-nft-creator
+  ghc-options:         -threaded
+  build-depends:       base >= 4.9 && < 5
+                    ,  cardano-alonzo-nft-creator

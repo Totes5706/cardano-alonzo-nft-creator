@@ -10,7 +10,7 @@
 #
 # Requirements:
 #
-# 1) Nix-shell - By running nix-shell in the plutus-apps main directory of the IOHK repo
+# 1) Nix-shell - By running nix-shell in the main cardano-alonzo-nft-creator repo
 # 2) Fully synced cardano node
 #
 # This script has not been audited! If you use this to mint NFTs on the mainnet, do so at your own risk!
