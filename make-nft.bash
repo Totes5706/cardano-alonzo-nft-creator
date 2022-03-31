@@ -383,7 +383,7 @@ echo Generating NFT policy
 echo;
 policyFile=policy/token.plutus
 
-#Send these four parameters to the on-chain code of Token.Onchain.hs to validate, then create the policy for the NFT
+#Send these three parameters to the on-chain code of Token.Onchain.hs to validate, then create the policy for the NFT
 cabal exec token-policy $policyFile $oref $tn
 
 #create a signed and unsigned file to prepare for the Cardano-CLI transaction build/sign
