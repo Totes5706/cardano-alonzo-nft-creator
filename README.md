@@ -79,7 +79,7 @@ This part should now be completed.
 By default, nix-shell includes the cardano-node and the cardano-cli. Therefore, we need to run nix-shell then sync the node. If you currently do not have a node running, follow along to get the helper scripts to sync the cardano node:
 
 
-First, let’s clone this cnode repo that already contains the sync scripts and config files:
+First, let’s clone this [cnode repo](https://github.com/Totes5706/cnode) that already contains the sync scripts and config files:
 
 - Directory: ```totinj@penguin:~$```
 ```
