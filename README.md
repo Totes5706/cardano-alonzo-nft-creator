@@ -110,7 +110,7 @@ nix-shell
 If this is run for the first time, it will take some time to build (30min + for a non-workstation computer).
 
 
-While in nix-shell, head to the node directory inside the cnode repo that we just cloned earlier:
+While in nix-shell, head to the main cnode directory inside the cnode repo that we just cloned earlier:
 
 - Directory: ```[nix-shell:~/cnode]$```
 
